@@ -1,5 +1,5 @@
 /* ==========================================================================
-   GE — HOME PAGE
+   GE — HOME PAGE INTERACTIONS
 
    Requires:
    Swiper
@@ -16,9 +16,7 @@
     document.addEventListener("DOMContentLoaded", () => {
   
       initSchoolCards();
-  
       initMetierCards();
-  
       initMediaSlider();
   
     });
@@ -27,10 +25,6 @@
   
     /* ==========================================================================
        1. SCHOOL CARDS
-  
-       .groupe--ecole-item
-         .formation--image-wrapper
-         .ecole--list-hover
     ========================================================================== */
   
     function initSchoolCards() {
@@ -40,36 +34,64 @@
       );
   
   
+      if (!cards.length) return;
+  
+  
       cards.forEach((card) => {
   
-        const hoverContent = card.querySelector(
+        const overlay = card.querySelector(
           ".ecole--list-hover"
         );
   
   
-        if (!hoverContent) return;
+        if (!overlay) return;
   
   
         /*
-          Accessibility:
-          if links exist inside the overlay,
-          focus-within from CSS will reveal it.
+          CSS handles the actual hover animation.
+  
+          This JS section is intentionally minimal so
+          Webflow keeps complete control over positioning,
+          sizing and visual variants.
         */
   
-        const links = hoverContent.querySelectorAll(
-          "a"
-        );
+  
+        /* ------------------------------------------------------------
+           Accessibility
+        ------------------------------------------------------------ */
+  
+        const links = overlay.querySelectorAll("a");
   
   
         links.forEach((link) => {
   
           link.addEventListener("focus", () => {
-            card.classList.add("is--keyboard-active");
+  
+            card.classList.add(
+              "is--keyboard-active"
+            );
+  
           });
   
   
           link.addEventListener("blur", () => {
-            card.classList.remove("is--keyboard-active");
+  
+            /*
+              Wait until browser updates activeElement.
+            */
+  
+            requestAnimationFrame(() => {
+  
+              if (!card.contains(document.activeElement)) {
+  
+                card.classList.remove(
+                  "is--keyboard-active"
+                );
+  
+              }
+  
+            });
+  
           });
   
         });
@@ -83,15 +105,20 @@
     /* ==========================================================================
        2. METIER CARDS
   
-       The CMS "Colors" value already appears as an inline background-color
-       on the button.
+       Existing structure:
   
-       Example:
+       .metier--card
   
-       <a
-         style="background-color:#ffdde4"
-         class="btn is--blak"
-       >
+         img.image--absolute100
+  
+         .mask--82
+  
+         .metier--card-text
+  
+           .max--304
+             h3.heading-style-46
+  
+           .btn
     ========================================================================== */
   
     function initMetierCards() {
@@ -101,73 +128,60 @@
       );
   
   
-      cards.forEach((card) => {
+      if (!cards.length) return;
   
-        /*
-          Primary source:
-          the colored CMS button.
-        */
+  
+      cards.forEach((card) => {
   
         const button = card.querySelector(
           ".metier--card-text .btn"
         );
   
   
-        /*
-          Fallback:
-          the title currently also contains
-          the CMS Colors value inline.
-        */
-  
         const title = card.querySelector(
-          ".metier--card-text h3"
+          ".metier--card-text .heading-style-46"
         );
   
   
-        let color = "";
+        if (!button) return;
+  
   
   
         /* ----------------------------------------------------------------------
-           BUTTON COLOR
+           GET CMS COLOR
+  
+           The CMS "Colors" field is already injected by Webflow
+           as background-color on the button.
         ---------------------------------------------------------------------- */
   
-        if (button) {
+        let color = button.style.backgroundColor;
+  
+  
+  
+        /* ----------------------------------------------------------------------
+           FALLBACK TO COMPUTED STYLE
+        ---------------------------------------------------------------------- */
+  
+        if (!color) {
   
           color =
-            button.style.backgroundColor ||
-            window.getComputedStyle(button).backgroundColor;
+            window
+              .getComputedStyle(button)
+              .backgroundColor;
   
         }
   
   
   
         /* ----------------------------------------------------------------------
-           TITLE COLOR FALLBACK
+           SET CARD COLOR VARIABLE
         ---------------------------------------------------------------------- */
   
         if (
-          !color ||
-          color === "transparent" ||
-          color === "rgba(0, 0, 0, 0)"
+          color &&
+          color !== "transparent" &&
+          color !== "rgba(0, 0, 0, 0)"
         ) {
-  
-          if (title) {
-  
-            color =
-              title.style.color ||
-              window.getComputedStyle(title).color;
-  
-          }
-  
-        }
-  
-  
-  
-        /* ----------------------------------------------------------------------
-           CSS VARIABLE
-        ---------------------------------------------------------------------- */
-  
-        if (color) {
   
           card.style.setProperty(
             "--metier-color",
@@ -178,10 +192,12 @@
   
   
   
-        /*
-          Title should always remain white,
-          including before hover.
-        */
+        /* ----------------------------------------------------------------------
+           TITLE ALWAYS WHITE
+  
+           We change only its color.
+           Nothing related to position/layout is modified.
+        ---------------------------------------------------------------------- */
   
         if (title) {
   
@@ -202,11 +218,15 @@
     /* ==========================================================================
        3. MEDIA SLIDER
   
-       Existing structure:
+       Structure already present in Webflow:
   
        .swiper.is--media
+  
          .swiper-wrapper
+  
            .swiper-slide
+           .swiper-slide
+           ...
     ========================================================================== */
   
     function initMediaSlider() {
@@ -219,6 +239,11 @@
       if (!sliders.length) return;
   
   
+  
+      /* ------------------------------------------------------------------------
+         SWIPER CHECK
+      ------------------------------------------------------------------------ */
+  
       if (typeof Swiper === "undefined") {
   
         console.warn(
@@ -230,10 +255,15 @@
       }
   
   
+  
+      /* ------------------------------------------------------------------------
+         INIT EACH SLIDER
+      ------------------------------------------------------------------------ */
+  
       sliders.forEach((slider) => {
   
         /*
-          Prevent duplicate initialization.
+          Avoid duplicate initialization.
         */
   
         if (slider.swiper) return;
@@ -244,28 +274,37 @@
           slider,
           {
   
-            /* --------------------------------------------------------------
-               CORE
-            -------------------------------------------------------------- */
+            /* ================================================================
+               BASIC
+            ================================================================ */
   
             slidesPerView: 1.15,
+  
+            slidesPerGroup: 1,
   
             spaceBetween: 16,
   
             speed: 700,
   
+  
+            /* ================================================================
+               POSITION
+            ================================================================ */
+  
+            centeredSlides: false,
+  
+            loop: false,
+  
+  
+            /* ================================================================
+               INTERACTION
+            ================================================================ */
+  
             grabCursor: true,
   
-            watchOverflow: true,
-  
-            resistanceRatio: 0.65,
-  
-  
-            /* --------------------------------------------------------------
-               TOUCH / MOUSE
-            -------------------------------------------------------------- */
-  
             simulateTouch: true,
+  
+            allowTouchMove: true,
   
             touchRatio: 1,
   
@@ -273,26 +312,34 @@
   
             threshold: 5,
   
+            resistance: true,
   
-            /* --------------------------------------------------------------
-               SLIDE BEHAVIOUR
-            -------------------------------------------------------------- */
-  
-            slidesPerGroup: 1,
-  
-            centeredSlides: false,
-  
-            loop: false,
+            resistanceRatio: 0.65,
   
   
-            /* --------------------------------------------------------------
+            /* ================================================================
+               BEHAVIOUR
+            ================================================================ */
+  
+            watchOverflow: true,
+  
+            observer: true,
+  
+            observeParents: true,
+  
+            resizeObserver: true,
+  
+  
+            /* ================================================================
                BREAKPOINTS
-            -------------------------------------------------------------- */
+            ================================================================ */
   
             breakpoints: {
   
   
-              /* Mobile landscape */
+              /* --------------------------------------------------------------
+                 Mobile landscape
+              -------------------------------------------------------------- */
   
               480: {
   
@@ -303,7 +350,9 @@
               },
   
   
-              /* Tablet */
+              /* --------------------------------------------------------------
+                 Tablet
+              -------------------------------------------------------------- */
   
               768: {
   
@@ -314,7 +363,9 @@
               },
   
   
-              /* Desktop */
+              /* --------------------------------------------------------------
+                 Desktop
+              -------------------------------------------------------------- */
   
               992: {
   
@@ -325,7 +376,9 @@
               },
   
   
-              /* Large desktop */
+              /* --------------------------------------------------------------
+                 Large desktop
+              -------------------------------------------------------------- */
   
               1440: {
   
@@ -343,6 +396,7 @@
       });
   
     }
+  
   
   
   })();
