@@ -1,88 +1,79 @@
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
+/* ==========================================================================
+   GE — INTERACTIONS & ANIMATIONS
+========================================================================== */
+
+/* ==========================================================================
+   LOAD / SCROLL ANIMATIONS
+========================================================================== */
+
+[animation="load"],
+[animation="fade"],
+[animation="fade-stagger"] > * {
+  will-change: transform, opacity;
 }
 
-:root {
-  --color-bg: #0f172a;
-  --color-surface: #1e293b;
-  --color-text: #f1f5f9;
-  --color-muted: #94a3b8;
-  --color-accent: #38bdf8;
-  --color-accent-hover: #0ea5e9;
-  --font-sans: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-  --radius: 8px;
-  --transition: 0.2s ease;
+/* ==========================================================================
+   NAVBAR DROPDOWNS
+========================================================================== */
+
+.nav--drop {
+  position: relative;
 }
 
-html {
-  font-size: 16px;
-  scroll-behavior: smooth;
+/*
+  Le dropdown reste contrôlé visuellement par Webflow.
+  On gère uniquement visibilité + animation.
+*/
+.nav--sub-menu {
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
+
+  transform: translateY(0.75rem);
+
+  will-change: transform, opacity;
 }
 
-body {
-  font-family: var(--font-sans);
-  background-color: var(--color-bg);
-  color: var(--color-text);
-  line-height: 1.6;
-  min-height: 100vh;
+/* Dropdown ouvert */
+.nav--drop.is--open .nav--sub-menu {
+  visibility: visible;
+  pointer-events: auto;
 }
 
-.container {
-  width: min(90%, 960px);
-  margin-inline: auto;
-  padding-block: 2rem;
+/* Arrow */
+.nav--arrow {
+  transition: transform 0.4s cubic-bezier(0.625, 0.05, 0, 1);
+  transform-origin: center;
 }
 
-h1,
-h2,
-h3 {
-  line-height: 1.2;
-  margin-bottom: 0.5em;
+.nav--drop.is--open .nav--arrow {
+  transform: rotate(180deg);
 }
 
-a {
-  color: var(--color-accent);
-  text-decoration: none;
-  transition: color var(--transition);
-}
-
-a:hover {
-  color: var(--color-accent-hover);
-}
-
-button,
-.btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  padding: 0.625rem 1.25rem;
-  font-family: inherit;
-  font-size: 0.9375rem;
-  font-weight: 500;
-  color: var(--color-bg);
-  background-color: var(--color-accent);
-  border: none;
-  border-radius: var(--radius);
+/* Trigger */
+.nav--trigger {
   cursor: pointer;
-  transition: background-color var(--transition);
+  -webkit-tap-highlight-color: transparent;
 }
 
-button:hover,
-.btn:hover {
-  background-color: var(--color-accent-hover);
-}
+/* ==========================================================================
+   REDUCED MOTION
+========================================================================== */
 
-.card {
-  background-color: var(--color-surface);
-  border-radius: var(--radius);
-  padding: 1.5rem;
-}
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 
-.text-muted {
-  color: var(--color-muted);
+  [animation="load"],
+  [animation="fade"],
+  [animation="fade-stagger"] > * {
+    opacity: 1 !important;
+    transform: none !important;
+  }
 }
