@@ -2,8 +2,9 @@
    GE — INTERACTIONS & ANIMATIONS
 ========================================================================== */
 
+
 /* ==========================================================================
-   LOAD / SCROLL ANIMATIONS
+   1. LOAD / SCROLL ANIMATIONS
 ========================================================================== */
 
 [animation="load"],
@@ -12,18 +13,30 @@
   will-change: transform, opacity;
 }
 
+
 /* ==========================================================================
-   NAVBAR DROPDOWNS
+   2. NAVBAR DROPDOWNS
 ========================================================================== */
 
 .nav--drop {
   position: relative;
 }
 
-/*
-  Le dropdown reste contrôlé visuellement par Webflow.
-  On gère uniquement visibilité + animation.
-*/
+
+/* --------------------------------------------------------------------------
+   Trigger
+-------------------------------------------------------------------------- */
+
+.nav--trigger {
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+
+/* --------------------------------------------------------------------------
+   Dropdown menu
+-------------------------------------------------------------------------- */
+
 .nav--sub-menu {
   visibility: hidden;
   opacity: 0;
@@ -34,33 +47,41 @@
   will-change: transform, opacity;
 }
 
-/* Dropdown ouvert */
+
+/* Open state */
+
 .nav--drop.is--open .nav--sub-menu {
   visibility: visible;
   pointer-events: auto;
 }
 
-/* Arrow */
+
+/* --------------------------------------------------------------------------
+   Arrow
+-------------------------------------------------------------------------- */
+
 .nav--arrow {
-  transition: transform 0.4s cubic-bezier(0.625, 0.05, 0, 1);
   transform-origin: center;
+  will-change: transform;
 }
 
-.nav--drop.is--open .nav--arrow {
-  transform: rotate(180deg);
-}
-
-/* Trigger */
-.nav--trigger {
-  cursor: pointer;
-  -webkit-tap-highlight-color: transparent;
-}
 
 /* ==========================================================================
-   REDUCED MOTION
+   3. ACCESSIBILITY
+========================================================================== */
+
+.nav--trigger:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 0.25rem;
+}
+
+
+/* ==========================================================================
+   4. REDUCED MOTION
 ========================================================================== */
 
 @media (prefers-reduced-motion: reduce) {
+
   *,
   *::before,
   *::after {
@@ -76,4 +97,5 @@
     opacity: 1 !important;
     transform: none !important;
   }
+
 }
