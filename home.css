@@ -1,0 +1,316 @@
+/* ==========================================================================
+   GE — HOME PAGE
+========================================================================== */
+
+
+/* ==========================================================================
+   1. HOME — ECOLES HOVER
+========================================================================== */
+
+/*
+  .ecole--list-hover est déjà positionné par Webflow.
+  On gère uniquement son apparition.
+*/
+
+.is--home-subhero .ecole--list-hover {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+  
+    transform: translateY(0.75rem);
+  
+    transition:
+      opacity 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+      transform 0.55s cubic-bezier(0.22, 1, 0.36, 1),
+      visibility 0.45s;
+  
+    will-change: opacity, transform;
+  }
+  
+  
+  /* Hover desktop */
+  
+  @media (hover: hover) and (pointer: fine) {
+  
+    .is--home-subhero
+    .groupe--ecole-item:hover
+    .ecole--list-hover {
+  
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+  
+      transform: translateY(0);
+    }
+  
+  }
+  
+  
+  /* Keyboard accessibility */
+  
+  .is--home-subhero
+  .groupe--ecole-item:focus-within
+  .ecole--list-hover {
+  
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+  
+    transform: translateY(0);
+  }
+  
+  
+  /* --------------------------------------------------------------------------
+     School links subtle entrance
+  -------------------------------------------------------------------------- */
+  
+  .is--home-subhero .ecole--hover-link {
+    transform: translateY(0.5rem);
+  
+    transition:
+      transform 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+      opacity 0.35s ease;
+  
+    will-change: transform;
+  }
+  
+  
+  @media (hover: hover) and (pointer: fine) {
+  
+    .is--home-subhero
+    .groupe--ecole-item:hover
+    .ecole--hover-link {
+  
+      transform: translateY(0);
+    }
+  
+  }
+  
+  
+  /* ==========================================================================
+     2. METIERS CARDS
+  ========================================================================== */
+  
+  .metier--card {
+    position: relative;
+    overflow: hidden;
+  
+    /*
+      Injecté automatiquement par home.js
+      depuis la couleur CMS "Colors".
+    */
+    --metier-color: transparent;
+  }
+  
+  
+  /* --------------------------------------------------------------------------
+     Image
+  -------------------------------------------------------------------------- */
+  
+  .metier--card > .image--absolute100 {
+    transition:
+      transform 0.75s cubic-bezier(0.22, 1, 0.36, 1);
+  
+    will-change: transform;
+  }
+  
+  
+  /* --------------------------------------------------------------------------
+     Colored shadow
+  -------------------------------------------------------------------------- */
+  
+  /*
+    On utilise un pseudo-element indépendant pour ne pas modifier
+    directement .mask--82 configuré dans Webflow.
+  */
+  
+  .metier--card::after {
+    content: "";
+  
+    position: absolute;
+    inset: 0;
+  
+    z-index: 1;
+  
+    pointer-events: none;
+  
+    opacity: 0;
+  
+    /*
+      Le shadow prend automatiquement la couleur du CMS.
+    */
+    box-shadow:
+      inset 0 -10rem 8rem -4rem var(--metier-color);
+  
+    transition:
+      opacity 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+  
+    will-change: opacity;
+  }
+  
+  
+  /*
+    Le contenu doit rester au-dessus du shadow.
+  */
+  
+  .metier--card .metier--card-text {
+    position: relative;
+    z-index: 2;
+  }
+  
+  
+  /* --------------------------------------------------------------------------
+     Title ALWAYS WHITE
+  -------------------------------------------------------------------------- */
+  
+  .metier--card .metier--card-text h3 {
+    color: #ffffff !important;
+  
+    transform: translateX(0);
+  
+    transition:
+      transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+  
+    will-change: transform;
+  }
+  
+  
+  /* --------------------------------------------------------------------------
+     Button
+  -------------------------------------------------------------------------- */
+  
+  .metier--card .metier--card-text .btn {
+    transform: translateX(0);
+  
+    transition:
+      transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+  
+    will-change: transform;
+  }
+  
+  
+  /* --------------------------------------------------------------------------
+     Hover
+  -------------------------------------------------------------------------- */
+  
+  @media (hover: hover) and (pointer: fine) {
+  
+    /*
+      Colored shadow appears.
+    */
+  
+    .metier--card:hover::after {
+      opacity: 0.9;
+    }
+  
+  
+    /*
+      Very subtle image movement.
+    */
+  
+    .metier--card:hover > .image--absolute100 {
+      transform: scale(1.035);
+    }
+  
+  
+    /*
+      Title → right 8px
+    */
+  
+    .metier--card:hover
+    .metier--card-text h3 {
+  
+      transform: translateX(8px);
+    }
+  
+  
+    /*
+      Button → left 8px
+    */
+  
+    .metier--card:hover
+    .metier--card-text .btn {
+  
+      transform: translateX(-8px);
+    }
+  
+  }
+  
+  
+  /* ==========================================================================
+     3. MEDIA SWIPER
+  ========================================================================== */
+  
+  .swiper.is--media {
+    width: 100%;
+    overflow: hidden;
+  }
+  
+  
+  /*
+    Swiper requires flex on wrapper.
+  */
+  
+  .swiper.is--media .swiper-wrapper {
+    display: flex;
+  
+    width: 100%;
+  }
+  
+  
+  /*
+    Important:
+    prevents Webflow/CMS styles from forcing widths.
+  */
+  
+  .swiper.is--media .swiper-slide {
+    flex-shrink: 0;
+    height: auto;
+  }
+  
+  
+  /*
+    Keep cards at full slide height.
+  */
+  
+  .swiper.is--media .media--card {
+    height: 100%;
+  }
+  
+  
+  /* Grab cursor */
+  
+  .swiper.is--media {
+    cursor: grab;
+  }
+  
+  .swiper.is--media:active {
+    cursor: grabbing;
+  }
+  
+  
+  /* ==========================================================================
+     4. REDUCED MOTION
+  ========================================================================== */
+  
+  @media (prefers-reduced-motion: reduce) {
+  
+    .is--home-subhero .ecole--list-hover,
+    .is--home-subhero .ecole--hover-link,
+    .metier--card::after,
+    .metier--card > .image--absolute100,
+    .metier--card .metier--card-text h3,
+    .metier--card .metier--card-text .btn {
+  
+      transition-duration: 0.01ms !important;
+    }
+  
+  
+    .metier--card:hover > .image--absolute100,
+    .metier--card:hover .metier--card-text h3,
+    .metier--card:hover .metier--card-text .btn {
+  
+      transform: none !important;
+    }
+  
+  }
