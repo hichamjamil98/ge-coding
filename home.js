@@ -49,56 +49,39 @@
         if (!overlay) return;
   
   
-        const links = overlay.querySelectorAll(
-          "a"
-        );
+        const links = overlay.querySelectorAll("a");
   
   
         links.forEach((link) => {
   
+          link.addEventListener("focus", () => {
   
-          /* ------------------------------------------------------------------
-             Focus
-          ------------------------------------------------------------------ */
+            card.classList.add(
+              "is--keyboard-active"
+            );
   
-          link.addEventListener(
-            "focus",
-            () => {
-  
-              card.classList.add(
-                "is--keyboard-active"
-              );
-  
-            }
-          );
+          });
   
   
-          /* ------------------------------------------------------------------
-             Blur
-          ------------------------------------------------------------------ */
+          link.addEventListener("blur", () => {
   
-          link.addEventListener(
-            "blur",
-            () => {
+            requestAnimationFrame(() => {
   
-              requestAnimationFrame(() => {
+              if (
+                !card.contains(
+                  document.activeElement
+                )
+              ) {
   
-                if (
-                  !card.contains(
-                    document.activeElement
-                  )
-                ) {
+                card.classList.remove(
+                  "is--keyboard-active"
+                );
   
-                  card.classList.remove(
-                    "is--keyboard-active"
-                  );
+              }
   
-                }
+            });
   
-              });
-  
-            }
-          );
+          });
   
         });
   
@@ -111,24 +94,18 @@
     /* ==========================================================================
        2. METIER CARDS
   
-       Existing Webflow structure:
+       Important:
   
-       .metier--card
+       JS DOES NOT modify:
+       - title color
+       - button background
+       - title transform
+       - button transform
+       - image
+       - mask
   
-         img.image--absolute100
-  
-         .mask--82
-  
-         .metier--card-text
-  
-           .max--304
-             h3.heading-style-46
-  
-           .btn
-  
-       IMPORTANT:
-       .mask--82 is never modified.
-       The image is never transformed.
+       It ONLY reads the CMS color
+       and stores it in CSS variables.
     ========================================================================== */
   
     function initMetierCards() {
@@ -148,11 +125,6 @@
         );
   
   
-        const title = card.querySelector(
-          ".metier--card-text .heading-style-46"
-        );
-  
-  
         if (!button) return;
   
   
@@ -160,10 +132,7 @@
         /* ======================================================================
            GET CMS COLOR
   
-           Webflow injects the CMS Colors value
-           directly as the button background-color.
-  
-           Example:
+           Existing Webflow example:
   
            style="background-color:#ffdde4"
         ====================================================================== */
@@ -205,7 +174,7 @@
   
   
         /* ======================================================================
-           CMS MAIN COLOR
+           CSS VARIABLE — CMS COLOR
         ====================================================================== */
   
         card.style.setProperty(
@@ -216,13 +185,10 @@
   
   
         /* ======================================================================
-           CMS SHADOW COLOR
+           SHADOW COLOR
   
-           Webflow original shadow color:
-           rgba(0, 0, 0, 0.2)
-  
-           We preserve the exact 20% alpha
-           and only replace black with the CMS color.
+           Same CMS color with exactly 20% opacity,
+           matching the Webflow shadow opacity.
         ====================================================================== */
   
         const shadowColor =
@@ -241,24 +207,6 @@
   
         }
   
-  
-  
-        /* ======================================================================
-           TITLE INITIAL STATE
-  
-           White before hover.
-        ====================================================================== */
-  
-        if (title) {
-  
-          title.style.setProperty(
-            "color",
-            "#ffffff",
-            "important"
-          );
-  
-        }
-  
       });
   
     }
@@ -266,18 +214,7 @@
   
   
     /* ==========================================================================
-       COLOR → RGBA
-  
-       Examples:
-  
-       #ffdde4
-       rgb(255, 221, 228)
-       hsl(...)
-       hsla(...)
-  
-       become:
-  
-       rgba(255, 221, 228, 0.2)
+       COLOR NORMALIZER
     ========================================================================== */
   
     function createTransparentColor(
@@ -288,32 +225,34 @@
       if (!color) return null;
   
   
-      const temporary =
+      const temp =
         document.createElement("span");
   
   
-      temporary.style.color = color;
+      temp.style.color = color;
   
-      temporary.style.display = "none";
+      temp.style.position = "absolute";
+  
+      temp.style.visibility = "hidden";
+  
+      temp.style.pointerEvents = "none";
   
   
-      document.body.appendChild(
-        temporary
-      );
+      document.body.appendChild(temp);
   
   
       const computedColor =
         window
-          .getComputedStyle(temporary)
+          .getComputedStyle(temp)
           .color;
   
   
-      temporary.remove();
+      temp.remove();
   
   
   
       /* ------------------------------------------------------------------------
-         Extract RGB values
+         Extract RGB
       ------------------------------------------------------------------------ */
   
       const values =
@@ -332,27 +271,25 @@
       }
   
   
-      const red =
+      const r =
         Math.round(
           Number(values[0])
         );
   
   
-      const green =
+      const g =
         Math.round(
           Number(values[1])
         );
   
   
-      const blue =
+      const b =
         Math.round(
           Number(values[2])
         );
   
   
-      return (
-        `rgba(${red}, ${green}, ${blue}, ${alpha})`
-      );
+      return `rgba(${r}, ${g}, ${b}, ${alpha})`;
   
     }
   
@@ -373,9 +310,9 @@
   
   
   
-      /* ==========================================================================
-         SWIPER CHECK
-      ========================================================================== */
+      /* ------------------------------------------------------------------------
+         Check Swiper
+      ------------------------------------------------------------------------ */
   
       if (typeof Swiper === "undefined") {
   
@@ -389,17 +326,13 @@
   
   
   
-      /* ==========================================================================
-         INIT SLIDERS
-      ========================================================================== */
+      /* ------------------------------------------------------------------------
+         Init
+      ------------------------------------------------------------------------ */
   
       sliders.forEach((slider) => {
   
-  
-        /* Avoid duplicate initialization */
-  
         if (slider.swiper) return;
-  
   
   
         new Swiper(
@@ -479,8 +412,6 @@
             breakpoints: {
   
   
-              /* Mobile landscape */
-  
               480: {
   
                 slidesPerView: 1.4,
@@ -489,8 +420,6 @@
   
               },
   
-  
-              /* Tablet */
   
               768: {
   
@@ -501,8 +430,6 @@
               },
   
   
-              /* Desktop */
-  
               992: {
   
                 slidesPerView: 3,
@@ -511,8 +438,6 @@
   
               },
   
-  
-              /* Large desktop */
   
               1440: {
   

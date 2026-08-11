@@ -23,8 +23,6 @@
   }
   
   
-  /* Links inside overlay */
-  
   .is--home-subhero .ecole--hover-link {
     opacity: 0;
   
@@ -38,9 +36,9 @@
   }
   
   
-  /* ==========================================================================
-     ECOLES — HOVER
-  ========================================================================== */
+  /* --------------------------------------------------------------------------
+     Hover
+  -------------------------------------------------------------------------- */
   
   @media (hover: hover) and (pointer: fine) {
   
@@ -96,9 +94,9 @@
   }
   
   
-  /* ==========================================================================
-     ECOLES — KEYBOARD
-  ========================================================================== */
+  /* --------------------------------------------------------------------------
+     Keyboard
+  -------------------------------------------------------------------------- */
   
   .is--home-subhero
   .groupe--ecole-item:focus-within
@@ -131,18 +129,20 @@
     --metier-shadow-color: rgba(0, 0, 0, 0.2);
   
     transition:
-      box-shadow 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+      box-shadow 0.45s cubic-bezier(0.22, 1, 0.36, 1);
   }
   
   
-  /* ==========================================================================
-     IMPORTANT
+  /*
+    IMPORTANT
   
-     - no image zoom
-     - no transform on image
-     - no modification of .mask--82
-     - Webflow keeps the existing layout
-  ========================================================================== */
+    Aucun style appliqué à :
+    .mask--82
+    .image--absolute100
+  
+    Donc aucun changement du gradient existant
+    et aucun zoom image.
+  */
   
   
   /* ==========================================================================
@@ -154,11 +154,13 @@
   .heading-style-46 {
     color: #ffffff !important;
   
+    transform: translateX(0);
+  
     transition:
       transform 0.5s cubic-bezier(0.22, 1, 0.36, 1),
       color 0.35s ease;
   
-    will-change: transform;
+    will-change: transform, color;
   }
   
   
@@ -169,13 +171,15 @@
   .metier--card
   .metier--card-text
   .btn {
+    transform: translateX(0);
+  
     transition:
       transform 0.5s cubic-bezier(0.22, 1, 0.36, 1),
       background-color 0.35s ease,
       border-color 0.35s ease,
       color 0.35s ease;
   
-    will-change: transform;
+    will-change: transform, background-color;
   }
   
   
@@ -186,14 +190,14 @@
   @media (hover: hover) and (pointer: fine) {
   
     /*
-      EXACT Webflow shadow values:
+      Shadow Webflow original:
   
-      X      = 0px
-      Y      = 2px
-      Blur   = 5px
-      Spread = 0px
+      X      0px
+      Y      2px
+      Blur   5px
+      Spread 0px
   
-      Only the color changes.
+      Seule la couleur change.
     */
   
     .metier--card:hover {
@@ -204,8 +208,9 @@
   
   
     /*
-      Title:
-      move RIGHT + use CMS color
+      Title
+      → RIGHT 8px
+      → CMS color
     */
   
     .metier--card:hover
@@ -218,8 +223,9 @@
   
   
     /*
-      Button:
-      move LEFT + use CMS color
+      Button
+      → LEFT 8px
+      → CMS background color
     */
   
     .metier--card:hover
@@ -252,20 +258,12 @@
   }
   
   
-  /* ==========================================================================
-     SWIPER WRAPPER
-  ========================================================================== */
-  
   .swiper.is--media .swiper-wrapper {
     display: flex;
   
     width: 100%;
   }
   
-  
-  /* ==========================================================================
-     SWIPER SLIDES
-  ========================================================================== */
   
   .swiper.is--media .swiper-slide {
     flex-shrink: 0;
@@ -274,18 +272,10 @@
   }
   
   
-  /* ==========================================================================
-     MEDIA CARD
-  ========================================================================== */
-  
   .swiper.is--media .media--card {
     height: 100%;
   }
   
-  
-  /* ==========================================================================
-     MEDIA IMAGES
-  ========================================================================== */
   
   .swiper.is--media img {
     user-select: none;
