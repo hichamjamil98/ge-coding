@@ -16,7 +16,9 @@
     document.addEventListener("DOMContentLoaded", () => {
   
       initSchoolCards();
+  
       initMetierCards();
+  
       initMediaSlider();
   
     });
@@ -47,52 +49,47 @@
         if (!overlay) return;
   
   
-        /*
-          CSS handles the actual hover animation.
-  
-          This JS section is intentionally minimal so
-          Webflow keeps complete control over positioning,
-          sizing and visual variants.
-        */
-  
-  
-        /* ------------------------------------------------------------
-           Accessibility
-        ------------------------------------------------------------ */
-  
-        const links = overlay.querySelectorAll("a");
+        const links = overlay.querySelectorAll(
+          "a"
+        );
   
   
         links.forEach((link) => {
   
-          link.addEventListener("focus", () => {
+          link.addEventListener(
+            "focus",
+            () => {
   
-            card.classList.add(
-              "is--keyboard-active"
-            );
+              card.classList.add(
+                "is--keyboard-active"
+              );
   
-          });
+            }
+          );
   
   
-          link.addEventListener("blur", () => {
+          link.addEventListener(
+            "blur",
+            () => {
   
-            /*
-              Wait until browser updates activeElement.
-            */
+              requestAnimationFrame(() => {
   
-            requestAnimationFrame(() => {
+                if (
+                  !card.contains(
+                    document.activeElement
+                  )
+                ) {
   
-              if (!card.contains(document.activeElement)) {
+                  card.classList.remove(
+                    "is--keyboard-active"
+                  );
   
-                card.classList.remove(
-                  "is--keyboard-active"
-                );
+                }
   
-              }
+              });
   
-            });
-  
-          });
+            }
+          );
   
         });
   
@@ -104,21 +101,6 @@
   
     /* ==========================================================================
        2. METIER CARDS
-  
-       Existing structure:
-  
-       .metier--card
-  
-         img.image--absolute100
-  
-         .mask--82
-  
-         .metier--card-text
-  
-           .max--304
-             h3.heading-style-46
-  
-           .btn
     ========================================================================== */
   
     function initMetierCards() {
@@ -148,9 +130,9 @@
   
   
         /* ----------------------------------------------------------------------
-           GET CMS COLOR
+           CMS COLOR
   
-           The CMS "Colors" field is already injected by Webflow
+           Webflow injects the CMS Colors value
            as background-color on the button.
         ---------------------------------------------------------------------- */
   
@@ -159,7 +141,7 @@
   
   
         /* ----------------------------------------------------------------------
-           FALLBACK TO COMPUTED STYLE
+           Fallback
         ---------------------------------------------------------------------- */
   
         if (!color) {
@@ -174,7 +156,7 @@
   
   
         /* ----------------------------------------------------------------------
-           SET CARD COLOR VARIABLE
+           Apply CMS color as CSS variable
         ---------------------------------------------------------------------- */
   
         if (
@@ -193,10 +175,7 @@
   
   
         /* ----------------------------------------------------------------------
-           TITLE ALWAYS WHITE
-  
-           We change only its color.
-           Nothing related to position/layout is modified.
+           Title initial state
         ---------------------------------------------------------------------- */
   
         if (title) {
@@ -217,16 +196,6 @@
   
     /* ==========================================================================
        3. MEDIA SLIDER
-  
-       Structure already present in Webflow:
-  
-       .swiper.is--media
-  
-         .swiper-wrapper
-  
-           .swiper-slide
-           .swiper-slide
-           ...
     ========================================================================== */
   
     function initMediaSlider() {
@@ -241,7 +210,7 @@
   
   
       /* ------------------------------------------------------------------------
-         SWIPER CHECK
+         Swiper check
       ------------------------------------------------------------------------ */
   
       if (typeof Swiper === "undefined") {
@@ -257,17 +226,12 @@
   
   
       /* ------------------------------------------------------------------------
-         INIT EACH SLIDER
+         Init
       ------------------------------------------------------------------------ */
   
       sliders.forEach((slider) => {
   
-        /*
-          Avoid duplicate initialization.
-        */
-  
         if (slider.swiper) return;
-  
   
   
         new Swiper(
@@ -318,7 +282,7 @@
   
   
             /* ================================================================
-               BEHAVIOUR
+               OBSERVERS
             ================================================================ */
   
             watchOverflow: true,
