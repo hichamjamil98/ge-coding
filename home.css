@@ -25,7 +25,6 @@
   
   .is--home-subhero .ecole--hover-link {
     opacity: 0;
-  
     transform: translateY(0.4rem);
   
     transition:
@@ -36,9 +35,9 @@
   }
   
   
-  /* ==========================================================================
+  /* --------------------------------------------------------------------------
      ECOLES — HOVER
-  ========================================================================== */
+  -------------------------------------------------------------------------- */
   
   @media (hover: hover) and (pointer: fine) {
   
@@ -59,7 +58,6 @@
     .groupe--ecole-item:hover
     .ecole--hover-link {
       opacity: 1;
-  
       transform: translateY(0);
     }
   
@@ -70,20 +68,17 @@
       transition-delay: 0.04s;
     }
   
-  
     .is--home-subhero
     .groupe--ecole-item:hover
     .ecole--hover-link:nth-child(2) {
       transition-delay: 0.08s;
     }
   
-  
     .is--home-subhero
     .groupe--ecole-item:hover
     .ecole--hover-link:nth-child(3) {
       transition-delay: 0.12s;
     }
-  
   
     .is--home-subhero
     .groupe--ecole-item:hover
@@ -94,9 +89,9 @@
   }
   
   
-  /* ==========================================================================
+  /* --------------------------------------------------------------------------
      ECOLES — KEYBOARD
-  ========================================================================== */
+  -------------------------------------------------------------------------- */
   
   .is--home-subhero
   .groupe--ecole-item:focus-within
@@ -115,7 +110,6 @@
   .groupe--ecole-item:focus-within
   .ecole--hover-link {
     opacity: 1;
-  
     transform: translateY(0);
   }
   
@@ -132,23 +126,23 @@
   }
   
   
-  /* ==========================================================================
-     IMPORTANT
+  /*
+    IMPORTANT:
   
-     - no image zoom
-     - no image transform
-     - no modification of .mask--82
-     - Webflow keeps the original layout
-  ========================================================================== */
+    - aucune modification de l'image
+    - aucun zoom
+    - aucune modification de .mask--82
+    - aucun changement du layout Webflow
+  */
   
   
-  /* ==========================================================================
-     METIERS — TITLE
-  ========================================================================== */
+  /* --------------------------------------------------------------------------
+     TITLE
+  -------------------------------------------------------------------------- */
   
   .metier--card
   .metier--card-text
-  .heading-style-46 {
+  .heading-style-40 {
     transform: translateX(0);
   
     transition:
@@ -159,9 +153,9 @@
   }
   
   
-  /* ==========================================================================
-     METIERS — BUTTON
-  ========================================================================== */
+  /* --------------------------------------------------------------------------
+     BUTTON
+  -------------------------------------------------------------------------- */
   
   .metier--card
   .metier--card-text
@@ -189,7 +183,7 @@
   @media (hover: hover) and (pointer: fine) {
   
     /*
-      Exact Webflow shadow:
+      Valeurs EXACTES du shadow Webflow :
   
       X      = 0px
       Y      = 0px
@@ -197,7 +191,7 @@
       Size   = 40px
       Type   = Outside
   
-      ONLY the color comes from CMS.
+      Seule la couleur change.
     */
   
     .metier--card:hover {
@@ -207,26 +201,26 @@
     }
   
   
-    /* ------------------------------------------------------------------------
-       Title
-       → RIGHT 8px
-       → CMS text color
-    ------------------------------------------------------------------------ */
+    /*
+      Titre :
+      → droite 8px
+      → couleur du background .metier--card
+    */
   
     .metier--card:hover
     .metier--card-text
-    .heading-style-46 {
+    .heading-style-40 {
       transform: translateX(8px);
   
       color: var(--metier-color) !important;
     }
   
   
-    /* ------------------------------------------------------------------------
-       Button
-       → LEFT 8px
-       → CMS background color
-    ------------------------------------------------------------------------ */
+    /*
+      Bouton :
+      → gauche 8px
+      → background = couleur .metier--card
+    */
   
     .metier--card:hover
     .metier--card-text
@@ -246,7 +240,6 @@
   
   .swiper.is--media {
     width: 100%;
-  
     overflow: hidden;
   
     cursor: grab;
@@ -260,14 +253,11 @@
   
   .swiper.is--media .swiper-wrapper {
     display: flex;
-  
-    width: 100%;
   }
   
   
   .swiper.is--media .swiper-slide {
     flex-shrink: 0;
-  
     height: auto;
   }
   
@@ -279,13 +269,69 @@
   
   .swiper.is--media img {
     user-select: none;
-  
     -webkit-user-drag: none;
   }
   
   
   /* ==========================================================================
-     4. REDUCED MOTION
+     4. FAQ
+  ========================================================================== */
+  
+  .faq--item {
+    overflow: hidden;
+  }
+  
+  
+  /* --------------------------------------------------------------------------
+     Question
+  -------------------------------------------------------------------------- */
+  
+  .faq--question {
+    cursor: pointer;
+  
+    -webkit-tap-highlight-color: transparent;
+  }
+  
+  
+  /* --------------------------------------------------------------------------
+     Answer
+  -------------------------------------------------------------------------- */
+  
+  .faq--answer {
+    height: 0;
+  
+    opacity: 0;
+  
+    overflow: hidden;
+  
+    pointer-events: none;
+  
+    will-change: height, opacity;
+  }
+  
+  
+  /* --------------------------------------------------------------------------
+     Arrow
+  -------------------------------------------------------------------------- */
+  
+  .faq--arrow {
+    transform-origin: center;
+  
+    will-change: transform;
+  }
+  
+  
+  /* --------------------------------------------------------------------------
+     Open state
+  -------------------------------------------------------------------------- */
+  
+  .faq--item.is--open .faq--answer {
+    pointer-events: auto;
+  }
+  
+  
+  /* ==========================================================================
+     5. REDUCED MOTION
   ========================================================================== */
   
   @media (prefers-reduced-motion: reduce) {
@@ -293,7 +339,7 @@
     .is--home-subhero .ecole--list-hover,
     .is--home-subhero .ecole--hover-link,
     .metier--card,
-    .metier--card .metier--card-text .heading-style-46,
+    .metier--card .metier--card-text .heading-style-40,
     .metier--card .metier--card-text .btn {
       transition-duration: 0.01ms !important;
     }
@@ -301,7 +347,7 @@
   
     .metier--card:hover
     .metier--card-text
-    .heading-style-46,
+    .heading-style-40,
   
     .metier--card:hover
     .metier--card-text

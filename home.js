@@ -2,7 +2,8 @@
    GE — HOME PAGE INTERACTIONS
 
    Requires:
-   Swiper
+   - GSAP
+   - Swiper
 ========================================================================== */
 
 (() => {
@@ -20,6 +21,8 @@
       initMetierCards();
   
       initMediaSlider();
+  
+      initFAQ();
   
     });
   
@@ -94,25 +97,13 @@
     /* ==========================================================================
        2. METIER CARDS
   
-       Existing Webflow structure:
+       La couleur utilisée pour :
   
-       .metier--card
+       - shadow
+       - titre hover
+       - button hover
   
-         img.image--absolute100
-  
-         .mask--82
-  
-         .metier--card-text
-  
-           .max--304
-             h3.heading-style-46
-  
-           .btn
-  
-       IMPORTANT:
-  
-       We only read the CMS color.
-       We do not modify image or mask.
+       vient directement du background-color de .metier--card.
     ========================================================================== */
   
     function initMetierCards() {
@@ -127,98 +118,29 @@
   
       cards.forEach((card) => {
   
-        const title = card.querySelector(
-          ".metier--card-text .heading-style-46"
-        );
+        const computed =
+          window.getComputedStyle(card);
   
   
-        const button = card.querySelector(
-          ".metier--card-text .btn"
-        );
-  
-  
-        if (!button && !title) return;
-  
-  
-  
-        /* ======================================================================
-           1. READ CMS COLOR
-  
-           Priority:
-           button inline background-color
-           then title inline color
-        ====================================================================== */
-  
-        let cmsColor = "";
-  
-  
-  
-        /* Button CMS color */
-  
-        if (
-          button &&
-          button.style.backgroundColor
-        ) {
-  
-          cmsColor =
-            button.style.backgroundColor;
-  
-        }
-  
-  
-  
-        /* Title fallback */
-  
-        if (
-          !cmsColor &&
-          title &&
-          title.style.color
-        ) {
-  
-          cmsColor =
-            title.style.color;
-  
-        }
-  
-  
-  
-        /* Computed style fallback */
-  
-        if (
-          !cmsColor &&
-          button
-        ) {
-  
-          const computedBackground =
-            window
-              .getComputedStyle(button)
-              .backgroundColor;
-  
-  
-          if (
-            computedBackground &&
-            computedBackground !== "transparent" &&
-            computedBackground !== "rgba(0, 0, 0, 0)"
-          ) {
-  
-            cmsColor =
-              computedBackground;
-  
-          }
-  
-        }
+        const backgroundColor =
+          computed.backgroundColor;
   
   
   
         /* ----------------------------------------------------------------------
-           Validate
+           Ignore transparent backgrounds
         ---------------------------------------------------------------------- */
   
         if (
-          !cmsColor ||
-          cmsColor === "transparent" ||
-          cmsColor === "rgba(0, 0, 0, 0)"
+          !backgroundColor ||
+          backgroundColor === "transparent" ||
+          backgroundColor === "rgba(0, 0, 0, 0)"
         ) {
+  
+          console.warn(
+            "GE Home: .metier--card has no background color.",
+            card
+          );
   
           return;
   
@@ -226,54 +148,14 @@
   
   
   
-        /* ======================================================================
-           2. STORE CMS COLOR
-  
-           Example:
-  
-           --metier-color: rgb(255, 221, 228);
-        ====================================================================== */
+        /* ----------------------------------------------------------------------
+           Store background color as CSS variable
+        ---------------------------------------------------------------------- */
   
         card.style.setProperty(
           "--metier-color",
-          cmsColor
+          backgroundColor
         );
-  
-  
-  
-        /* ======================================================================
-           3. REMOVE CMS INLINE COLORS
-  
-           Important:
-  
-           We already stored the CMS value.
-  
-           The initial state should now be controlled
-           entirely by Webflow.
-  
-           CMS color appears ONLY on hover.
-        ====================================================================== */
-  
-        if (title) {
-  
-          title.style.removeProperty(
-            "color"
-          );
-  
-        }
-  
-  
-        if (button) {
-  
-          button.style.removeProperty(
-            "background-color"
-          );
-  
-          button.style.removeProperty(
-            "border-color"
-          );
-  
-        }
   
       });
   
@@ -296,9 +178,9 @@
   
   
   
-      /* ==========================================================================
-         SWIPER CHECK
-      ========================================================================== */
+      /* ------------------------------------------------------------------------
+         Check Swiper
+      ------------------------------------------------------------------------ */
   
       if (typeof Swiper === "undefined") {
   
@@ -312,13 +194,14 @@
   
   
   
-      /* ==========================================================================
-         INIT
-      ========================================================================== */
-  
       sliders.forEach((slider) => {
   
+        /*
+          Prevent duplicate initialization.
+        */
+  
         if (slider.swiper) return;
+  
   
   
         new Swiper(
@@ -326,7 +209,7 @@
           {
   
             /* ================================================================
-               BASIC
+               CORE
             ================================================================ */
   
             slidesPerView: 1.15,
@@ -350,7 +233,7 @@
   
   
             /* ================================================================
-               INTERACTION
+               TOUCH / DRAG
             ================================================================ */
   
             grabCursor: true,
@@ -447,6 +330,469 @@
         );
   
       });
+  
+    }
+  
+  
+  
+    /* ==========================================================================
+       4. FAQ
+    ========================================================================== */
+  
+    function initFAQ() {
+  
+      const items = [
+        ...document.querySelectorAll(
+          ".faq--item"
+        )
+      ];
+  
+  
+      if (!items.length) return;
+  
+  
+  
+      /* ------------------------------------------------------------------------
+         GSAP check
+      ------------------------------------------------------------------------ */
+  
+      if (typeof gsap === "undefined") {
+  
+        console.warn(
+          "GE Home: GSAP is missing for FAQ."
+        );
+  
+        return;
+  
+      }
+  
+  
+  
+      items.forEach((item) => {
+  
+        const question = item.querySelector(
+          ".faq--question"
+        );
+  
+  
+        const answer = item.querySelector(
+          ".faq--answer"
+        );
+  
+  
+        const arrow = item.querySelector(
+          ".faq--arrow"
+        );
+  
+  
+        if (!question || !answer) return;
+  
+  
+  
+        /* ======================================================================
+           ACCESSIBILITY
+        ====================================================================== */
+  
+        question.setAttribute(
+          "role",
+          "button"
+        );
+  
+  
+        question.setAttribute(
+          "tabindex",
+          "0"
+        );
+  
+  
+        question.setAttribute(
+          "aria-expanded",
+          "false"
+        );
+  
+  
+  
+        /* ======================================================================
+           INITIAL STATE
+        ====================================================================== */
+  
+        gsap.set(
+          answer,
+          {
+  
+            height: 0,
+  
+            opacity: 0,
+  
+            overflow: "hidden",
+  
+            pointerEvents: "none"
+  
+          }
+        );
+  
+  
+        if (arrow) {
+  
+          gsap.set(
+            arrow,
+            {
+              rotate: 0
+            }
+          );
+  
+        }
+  
+  
+  
+        /* ======================================================================
+           CLICK
+        ====================================================================== */
+  
+        question.addEventListener(
+          "click",
+          () => {
+  
+            toggleFAQ(item);
+  
+          }
+        );
+  
+  
+  
+        /* ======================================================================
+           KEYBOARD
+        ====================================================================== */
+  
+        question.addEventListener(
+          "keydown",
+          (event) => {
+  
+            if (
+              event.key === "Enter" ||
+              event.key === " "
+            ) {
+  
+              event.preventDefault();
+  
+              toggleFAQ(item);
+  
+            }
+  
+  
+            if (
+              event.key === "Escape"
+            ) {
+  
+              closeFAQ(item);
+  
+            }
+  
+          }
+        );
+  
+      });
+  
+  
+  
+      /* ========================================================================
+         TOGGLE
+      ======================================================================== */
+  
+      function toggleFAQ(item) {
+  
+        const isOpen =
+          item.classList.contains(
+            "is--open"
+          );
+  
+  
+        if (isOpen) {
+  
+          closeFAQ(item);
+  
+        }
+  
+        else {
+  
+          /*
+            One open FAQ at a time.
+          */
+  
+          items.forEach((otherItem) => {
+  
+            if (
+              otherItem !== item
+            ) {
+  
+              closeFAQ(otherItem);
+  
+            }
+  
+          });
+  
+  
+          openFAQ(item);
+  
+        }
+  
+      }
+  
+  
+  
+      /* ========================================================================
+         OPEN
+      ======================================================================== */
+  
+      function openFAQ(item) {
+  
+        const question = item.querySelector(
+          ".faq--question"
+        );
+  
+  
+        const answer = item.querySelector(
+          ".faq--answer"
+        );
+  
+  
+        const arrow = item.querySelector(
+          ".faq--arrow"
+        );
+  
+  
+        if (!answer) return;
+  
+  
+  
+        gsap.killTweensOf(answer);
+  
+  
+        if (arrow) {
+  
+          gsap.killTweensOf(arrow);
+  
+        }
+  
+  
+  
+        item.classList.add(
+          "is--open"
+        );
+  
+  
+        question?.setAttribute(
+          "aria-expanded",
+          "true"
+        );
+  
+  
+  
+        /* ----------------------------------------------------------------------
+           Animate answer
+        ---------------------------------------------------------------------- */
+  
+        gsap.set(
+          answer,
+          {
+  
+            height: "auto",
+  
+            opacity: 1,
+  
+            pointerEvents: "auto"
+  
+          }
+        );
+  
+  
+        const height =
+          answer.offsetHeight;
+  
+  
+        gsap.fromTo(
+          answer,
+  
+          {
+  
+            height: 0,
+  
+            opacity: 0
+  
+          },
+  
+          {
+  
+            height: height,
+  
+            opacity: 1,
+  
+            duration: 0.5,
+  
+            ease: "power3.out",
+  
+            overwrite: true,
+  
+            onComplete: () => {
+  
+              gsap.set(
+                answer,
+                {
+                  height: "auto"
+                }
+              );
+  
+            }
+  
+          }
+        );
+  
+  
+  
+        /* ----------------------------------------------------------------------
+           Arrow
+        ---------------------------------------------------------------------- */
+  
+        if (arrow) {
+  
+          gsap.to(
+            arrow,
+            {
+  
+              rotate: 180,
+  
+              duration: 0.4,
+  
+              ease: "power3.out",
+  
+              overwrite: true
+  
+            }
+          );
+  
+        }
+  
+      }
+  
+  
+  
+      /* ========================================================================
+         CLOSE
+      ======================================================================== */
+  
+      function closeFAQ(item) {
+  
+        if (
+          !item.classList.contains(
+            "is--open"
+          )
+        ) {
+  
+          return;
+  
+        }
+  
+  
+        const question = item.querySelector(
+          ".faq--question"
+        );
+  
+  
+        const answer = item.querySelector(
+          ".faq--answer"
+        );
+  
+  
+        const arrow = item.querySelector(
+          ".faq--arrow"
+        );
+  
+  
+        if (!answer) return;
+  
+  
+  
+        item.classList.remove(
+          "is--open"
+        );
+  
+  
+        question?.setAttribute(
+          "aria-expanded",
+          "false"
+        );
+  
+  
+  
+        gsap.killTweensOf(answer);
+  
+  
+        if (arrow) {
+  
+          gsap.killTweensOf(arrow);
+  
+        }
+  
+  
+  
+        /* ----------------------------------------------------------------------
+           Answer
+        ---------------------------------------------------------------------- */
+  
+        gsap.to(
+          answer,
+          {
+  
+            height: 0,
+  
+            opacity: 0,
+  
+            duration: 0.4,
+  
+            ease: "power2.inOut",
+  
+            overwrite: true,
+  
+            onComplete: () => {
+  
+              gsap.set(
+                answer,
+                {
+                  pointerEvents: "none"
+                }
+              );
+  
+            }
+  
+          }
+        );
+  
+  
+  
+        /* ----------------------------------------------------------------------
+           Arrow
+        ---------------------------------------------------------------------- */
+  
+        if (arrow) {
+  
+          gsap.to(
+            arrow,
+            {
+  
+              rotate: 0,
+  
+              duration: 0.35,
+  
+              ease: "power2.inOut",
+  
+              overwrite: true
+  
+            }
+          );
+  
+        }
+  
+      }
   
     }
   
