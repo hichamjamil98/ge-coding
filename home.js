@@ -131,8 +131,6 @@
   
     /* ==========================================================================
        2. METIER CARDS
-  
-       Couleur = background-color de .metier--card
     ========================================================================== */
   
     function initMetierCards() {
@@ -225,7 +223,9 @@
             );
   
   
-          closeAllFilters(filter);
+          closeAllFilters(
+            filter
+          );
   
   
           if (isOpen) {
@@ -462,7 +462,7 @@
   
   
             /* --------------------------------------------------------------
-               UPDATE TEXT
+               CHANGE LABEL
             -------------------------------------------------------------- */
   
             if (label) {
@@ -475,7 +475,7 @@
   
   
             /* --------------------------------------------------------------
-               ACTIVE
+               ACTIVE OPTION
             -------------------------------------------------------------- */
   
             options.forEach((other) => {
@@ -494,9 +494,8 @@
   
   
             /* --------------------------------------------------------------
-               FILTER
+               FILTER ACTUALITES
   
-               Actualités:
                filter="results"
             -------------------------------------------------------------- */
   
@@ -520,7 +519,9 @@
   
   
               item.style.display =
-                show ? "" : "none";
+                show
+                  ? ""
+                  : "none";
   
             });
   
@@ -577,7 +578,9 @@
               slide.cloneNode(true);
   
   
-            cleanSwiperSlide(clone);
+            cleanSwiperSlide(
+              clone
+            );
   
   
             return clone;
@@ -637,7 +640,7 @@
   
   
     /* ==========================================================================
-       GET 2REM GAP
+       2REM → PIXELS
     ========================================================================== */
   
     function getMediaGap() {
@@ -693,7 +696,11 @@
         );
   
   
-      if (!slides.length) return;
+      if (!slides.length) {
+  
+        return;
+  
+      }
   
   
       mediaSwiper =
@@ -705,9 +712,12 @@
                WIDTH
             ================================================================ */
   
-            slidesPerView: "auto",
+            slidesPerView:
+              "auto",
   
-            slidesPerGroup: 1,
+  
+            slidesPerGroup:
+              1,
   
   
             /* ================================================================
@@ -722,15 +732,17 @@
                SPEED
             ================================================================ */
   
-            speed: 850,
+            speed:
+              850,
   
   
             /* ================================================================
-               TRUE INFINITE LOOP
+               TRUE LOOP
             ================================================================ */
   
             loop:
               slides.length > 1,
+  
   
             loopAdditionalSlides:
               slides.length,
@@ -744,7 +756,8 @@
               slides.length > 1
                 ? {
   
-                    delay: 2500,
+                    delay:
+                      2500,
   
                     disableOnInteraction:
                       false,
@@ -756,40 +769,68 @@
                 : false,
   
   
-            centeredSlides: false,
+            /* ================================================================
+               POSITION
+            ================================================================ */
+  
+            centeredSlides:
+              false,
   
   
             /* ================================================================
                INTERACTION
             ================================================================ */
   
-            grabCursor: true,
+            grabCursor:
+              true,
+  
   
             allowTouchMove:
               slides.length > 1,
   
-            simulateTouch: true,
   
-            touchRatio: 1,
-  
-            touchAngle: 45,
-  
-            threshold: 5,
+            simulateTouch:
+              true,
   
   
-            resistance: true,
-  
-            resistanceRatio: 0.65,
-  
-  
-            watchOverflow: false,
+            touchRatio:
+              1,
   
   
-            observer: true,
+            touchAngle:
+              45,
   
-            observeParents: true,
   
-            resizeObserver: true
+            threshold:
+              5,
+  
+  
+            resistance:
+              true,
+  
+  
+            resistanceRatio:
+              0.65,
+  
+  
+            /* ================================================================
+               STABILITY
+            ================================================================ */
+  
+            watchOverflow:
+              false,
+  
+  
+            observer:
+              true,
+  
+  
+            observeParents:
+              true,
+  
+  
+            resizeObserver:
+              true
   
           }
         );
@@ -804,7 +845,11 @@
   
     function destroyMediaSwiper() {
   
-      if (!mediaSwiper) return;
+      if (!mediaSwiper) {
+  
+        return;
+  
+      }
   
   
       mediaSwiper.destroy(
@@ -813,7 +858,8 @@
       );
   
   
-      mediaSwiper = null;
+      mediaSwiper =
+        null;
   
     }
   
@@ -860,12 +906,14 @@
   
   
       const selectedNormalized =
-        normalizeText(selected);
+        normalizeText(
+          selected
+        );
   
   
   
       /* ------------------------------------------------------------------------
-         DESTROY
+         DESTROY CURRENT SWIPER
       ------------------------------------------------------------------------ */
   
       destroyMediaSwiper();
@@ -876,14 +924,15 @@
          CLEAR
       ------------------------------------------------------------------------ */
   
-      wrapper.innerHTML = "";
+      wrapper.innerHTML =
+        "";
   
   
   
       /* ------------------------------------------------------------------------
-         MATCH
+         FILTER
   
-         Médias:
+         Media utilise :
          filter="result"
       ------------------------------------------------------------------------ */
   
@@ -941,18 +990,22 @@
   
   
       /* ------------------------------------------------------------------------
-         RECREATE SWIPER
+         RECREATE
       ------------------------------------------------------------------------ */
   
-      requestAnimationFrame(() => {
+      requestAnimationFrame(
+        () => {
   
-        requestAnimationFrame(() => {
+          requestAnimationFrame(
+            () => {
   
-          createMediaSwiper();
+              createMediaSwiper();
   
-        });
+            }
+          );
   
-      });
+        }
+      );
   
     }
   
@@ -992,8 +1045,9 @@
   
   
       /*
-        Ton HTML utilise également
-        .actualites--filter-drop pour Médias.
+        Dans ton HTML actuel,
+        Média utilise aussi :
+        .actualites--filter-drop
       */
   
       const dropdown =
@@ -1043,7 +1097,7 @@
   
   
             /* --------------------------------------------------------------
-               UPDATE TEXT
+               CHANGE LABEL
             -------------------------------------------------------------- */
   
             if (label) {
@@ -1059,13 +1113,15 @@
                ACTIVE
             -------------------------------------------------------------- */
   
-            options.forEach((other) => {
+            options.forEach(
+              (other) => {
   
-              other.classList.remove(
-                "is--active"
-              );
+                other.classList.remove(
+                  "is--active"
+                );
   
-            });
+              }
+            );
   
   
             option.classList.add(
@@ -1084,7 +1140,9 @@
   
   
   
-            closeFilter(filter);
+            closeFilter(
+              filter
+            );
   
           }
         );
@@ -1117,7 +1175,9 @@
                 )
               ) {
   
-                closeFilter(filter);
+                closeFilter(
+                  filter
+                );
   
               }
   
@@ -1175,7 +1235,11 @@
         );
   
   
-      if (!items.length) return;
+      if (!items.length) {
+  
+        return;
+  
+      }
   
   
       if (
@@ -1222,6 +1286,11 @@
         }
   
   
+  
+        /* ----------------------------------------------------------------------
+           ACCESSIBILITY
+        ---------------------------------------------------------------------- */
+  
         question.setAttribute(
           "role",
           "button"
@@ -1240,17 +1309,26 @@
         );
   
   
+  
+        /* ----------------------------------------------------------------------
+           INITIAL
+        ---------------------------------------------------------------------- */
+  
         gsap.set(
           answer,
           {
   
-            height: 0,
+            height:
+              0,
   
-            opacity: 0,
+            opacity:
+              0,
   
-            overflow: "hidden",
+            overflow:
+              "hidden",
   
-            pointerEvents: "none"
+            pointerEvents:
+              "none"
   
           }
         );
@@ -1261,46 +1339,64 @@
           gsap.set(
             arrow,
             {
-              rotate: 0
+  
+              rotate:
+                0
+  
             }
           );
   
         }
   
   
-        const toggle = () => {
   
-          const isOpen =
-            item.classList.contains(
-              "is--open"
-            );
+        /* ----------------------------------------------------------------------
+           TOGGLE
+        ---------------------------------------------------------------------- */
   
+        const toggle =
+          () => {
   
-          if (isOpen) {
-  
-            closeFAQ(item);
-  
-            return;
-  
-          }
+            const isOpen =
+              item.classList.contains(
+                "is--open"
+              );
   
   
-          items.forEach((other) => {
+            if (isOpen) {
   
-            if (
-              other !== item
-            ) {
+              closeFAQ(
+                item
+              );
   
-              closeFAQ(other);
+              return;
   
             }
   
-          });
+  
+            items.forEach(
+              (other) => {
+  
+                if (
+                  other !==
+                  item
+                ) {
+  
+                  closeFAQ(
+                    other
+                  );
+  
+                }
+  
+              }
+            );
   
   
-          openFAQ(item);
+            openFAQ(
+              item
+            );
   
-        };
+          };
   
   
         question.addEventListener(
@@ -1332,7 +1428,9 @@
               "Escape"
             ) {
   
-              closeFAQ(item);
+              closeFAQ(
+                item
+              );
   
             }
   
@@ -1349,7 +1447,9 @@
        OPEN FAQ
     ========================================================================== */
   
-    function openFAQ(item) {
+    function openFAQ(
+      item
+    ) {
   
       if (
         item.classList.contains(
@@ -1380,7 +1480,11 @@
         );
   
   
-      if (!answer) return;
+      if (!answer) {
+  
+        return;
+  
+      }
   
   
       item.classList.add(
@@ -1412,17 +1516,23 @@
         answer,
         {
   
-          height: "auto",
+          height:
+            "auto",
   
-          opacity: 1,
+          opacity:
+            1,
   
-          pointerEvents: "auto",
+          pointerEvents:
+            "auto",
   
-          duration: 0.5,
+          duration:
+            0.5,
   
-          ease: "power3.out",
+          ease:
+            "power3.out",
   
-          overwrite: true
+          overwrite:
+            true
   
         }
       );
@@ -1434,13 +1544,17 @@
           arrow,
           {
   
-            rotate: 180,
+            rotate:
+              180,
   
-            duration: 0.4,
+            duration:
+              0.4,
   
-            ease: "power3.out",
+            ease:
+              "power3.out",
   
-            overwrite: true
+            overwrite:
+              true
   
           }
         );
@@ -1455,7 +1569,9 @@
        CLOSE FAQ
     ========================================================================== */
   
-    function closeFAQ(item) {
+    function closeFAQ(
+      item
+    ) {
   
       if (
         !item.classList.contains(
@@ -1486,7 +1602,11 @@
         );
   
   
-      if (!answer) return;
+      if (!answer) {
+  
+        return;
+  
+      }
   
   
       question?.setAttribute(
@@ -1513,25 +1633,32 @@
         answer,
         {
   
-          height: 0,
+          height:
+            0,
   
-          opacity: 0,
+          opacity:
+            0,
   
-          pointerEvents: "none",
+          pointerEvents:
+            "none",
   
-          duration: 0.4,
+          duration:
+            0.4,
   
-          ease: "power2.inOut",
+          ease:
+            "power2.inOut",
   
-          overwrite: true,
+          overwrite:
+            true,
   
-          onComplete: () => {
+          onComplete:
+            () => {
   
-            item.classList.remove(
-              "is--open"
-            );
+              item.classList.remove(
+                "is--open"
+              );
   
-          }
+            }
   
         }
       );
@@ -1543,13 +1670,17 @@
           arrow,
           {
   
-            rotate: 0,
+            rotate:
+              0,
   
-            duration: 0.35,
+            duration:
+              0.35,
   
-            ease: "power2.inOut",
+            ease:
+              "power2.inOut",
   
-            overwrite: true
+            overwrite:
+              true
   
           }
         );

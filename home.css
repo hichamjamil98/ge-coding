@@ -1,5 +1,5 @@
 /* ==========================================================================
-   GE — HOME
+   GE — HOME PAGE
 ========================================================================== */
 
 
@@ -23,24 +23,29 @@
       transform 0.5s cubic-bezier(0.22, 1, 0.36, 1),
       visibility 0s linear 0.4s;
   
-    will-change: opacity, transform;
+    will-change:
+      opacity,
+      transform;
   }
   
   .is--home-subhero .ecole--hover-link {
     opacity: 0;
+  
     transform: translateY(0.35rem);
   
     transition:
       opacity 0.35s ease,
       transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
   
-    will-change: opacity, transform;
+    will-change:
+      opacity,
+      transform;
   }
   
   
-  /* ==========================================================================
+  /* --------------------------------------------------------------------------
      ECOLES — HOVER
-  ========================================================================== */
+  -------------------------------------------------------------------------- */
   
   @media (hover: hover) and (pointer: fine) {
   
@@ -60,6 +65,7 @@
     .groupe--ecole-item:hover
     .ecole--hover-link {
       opacity: 1;
+  
       transform: translateY(0);
     }
   
@@ -90,9 +96,9 @@
   }
   
   
-  /* ==========================================================================
+  /* --------------------------------------------------------------------------
      ECOLES — KEYBOARD
-  ========================================================================== */
+  -------------------------------------------------------------------------- */
   
   .is--home-subhero
   .groupe--ecole-item:focus-within
@@ -110,6 +116,7 @@
   .groupe--ecole-item:focus-within
   .ecole--hover-link {
     opacity: 1;
+  
     transform: translateY(0);
   }
   
@@ -143,7 +150,9 @@
       transform 0.5s cubic-bezier(0.22, 1, 0.36, 1),
       color 0.35s ease;
   
-    will-change: transform, color;
+    will-change:
+      transform,
+      color;
   }
   
   
@@ -170,9 +179,9 @@
   }
   
   
-  /* ==========================================================================
+  /* --------------------------------------------------------------------------
      METIERS — HOVER
-  ========================================================================== */
+  -------------------------------------------------------------------------- */
   
   @media (hover: hover) and (pointer: fine) {
   
@@ -203,27 +212,48 @@
   
   
   /* ==========================================================================
-     3. FILTERS — ACTUALITES + MEDIA
+     3. FILTERS — Z INDEX
   ========================================================================== */
   
   /*
     IMPORTANT:
-    on ne change PAS top / right / left / position du dropdown.
-    L'emplacement reste 100% celui de Webflow.
+  
+    Aucun déplacement des dropdowns ici.
+    La position reste celle définie dans Webflow.
+  
+    On agit uniquement sur :
+    - stacking
+    - overflow
   */
+  
   
   .filter--top {
     position: relative;
-    z-index: 50;
+  
+    z-index: 500 !important;
+  
+    overflow: visible !important;
   }
   
+  
+  /*
+    On remonte aussi le container qui contient le filter--top
+    sans modifier son emplacement.
+  */
+  
+  .filter--top
   .faq--filter {
     position: relative;
-    z-index: 1;
+  
+    z-index: 510 !important;
+  
+    overflow: visible !important;
   }
   
+  
+  .filter--top
   .faq--filter.is--open {
-    z-index: 1000;
+    z-index: 9999 !important;
   }
   
   
@@ -231,8 +261,10 @@
      TRIGGER
   -------------------------------------------------------------------------- */
   
+  .filter--top
   .actualite--filter-trigger {
     position: relative;
+  
     z-index: 2;
   
     cursor: pointer;
@@ -244,12 +276,17 @@
   /* --------------------------------------------------------------------------
      DROPDOWN
   
-     Actualités et Médias utilisent actuellement
-     .actualites--filter-drop
+     Ne pas ajouter :
+     position:absolute
+     top
+     right
+     left
+     bottom
   -------------------------------------------------------------------------- */
   
+  .filter--top
   .actualites--filter-drop {
-    z-index: 1001;
+    z-index: 10000 !important;
   
     opacity: 0;
     visibility: hidden;
@@ -262,9 +299,13 @@
       transform 0.4s cubic-bezier(0.22, 1, 0.36, 1),
       visibility 0s linear 0.4s;
   
-    will-change: opacity, transform;
+    will-change:
+      opacity,
+      transform;
   }
   
+  
+  .filter--top
   .faq--filter.is--open
   .actualites--filter-drop {
     opacity: 1;
@@ -278,7 +319,7 @@
   
   
   /* --------------------------------------------------------------------------
-     FILTER ARROW
+     ARROW
   -------------------------------------------------------------------------- */
   
   .faq--filter-arrow {
@@ -289,6 +330,7 @@
   
     will-change: transform;
   }
+  
   
   .faq--filter.is--open
   .faq--filter-arrow {
@@ -308,10 +350,12 @@
       opacity 0.25s ease;
   }
   
+  
   .actualites--filter-drop
   [filter="text"]:hover {
     opacity: 0.6;
   }
+  
   
   .actualites--filter-drop
   [filter="text"].is--active {
@@ -319,7 +363,9 @@
   }
   
   
-  /* CMS values used for filtering */
+  /* --------------------------------------------------------------------------
+     CMS FILTER VALUE
+  -------------------------------------------------------------------------- */
   
   .filter--result {
     display: none !important;
@@ -332,8 +378,10 @@
   
   .grid--2cl.is--actualites {
     position: relative;
+  
     z-index: 1;
   }
+  
   
   .grid--2cl.is--actualites
   > .w-dyn-item {
@@ -344,37 +392,65 @@
   
   
   /* ==========================================================================
-     5. MEDIA SLIDER
+     5. MEDIA SECTION
   ========================================================================== */
   
   .section.is--home-slider {
     position: relative;
-    overflow: visible;
+  
+    overflow: visible !important;
   }
   
   
   /*
-    Le filtre Média reste devant Swiper.
+    Filter Media devant le Swiper.
   */
   
   .section.is--home-slider
   .filter--top {
     position: relative;
-    z-index: 100;
+  
+    z-index: 500 !important;
+  
+    overflow: visible !important;
   }
+  
+  
+  .section.is--home-slider
+  .media--filter {
+    position: relative;
+  
+    z-index: 600 !important;
+  
+    overflow: visible !important;
+  }
+  
+  
+  .section.is--home-slider
+  .faq--filter {
+    z-index: 700 !important;
+  }
+  
   
   .section.is--home-slider
   .faq--filter.is--open {
-    z-index: 1000;
+    z-index: 9999 !important;
   }
   
   
-  /* --------------------------------------------------------------------------
-     SWIPER
-  -------------------------------------------------------------------------- */
+  .section.is--home-slider
+  .actualites--filter-drop {
+    z-index: 10000 !important;
+  }
+  
+  
+  /* ==========================================================================
+     MEDIA SWIPER
+  ========================================================================== */
   
   .swiper.is--media {
     position: relative;
+  
     z-index: 1;
   
     width: 100%;
@@ -383,6 +459,7 @@
   
     cursor: grab;
   }
+  
   
   .swiper.is--media:active {
     cursor: grabbing;
@@ -404,7 +481,7 @@
   /* --------------------------------------------------------------------------
      SLIDES
   
-     Width reste pilotée par Webflow.
+     La width reste contrôlée par Webflow.
   -------------------------------------------------------------------------- */
   
   .swiper.is--media
@@ -428,18 +505,26 @@
   
   
   /* --------------------------------------------------------------------------
-     IMAGES
+     IMAGE
   -------------------------------------------------------------------------- */
   
   .swiper.is--media img {
     user-select: none;
+  
     -webkit-user-drag: none;
   }
   
   
   /*
-    Aucune règle sur .heading-style-20.
-    Webflow garde toute la typographie.
+    IMPORTANT:
+  
+    Aucune règle CSS sur .heading-style-20.
+    Webflow garde :
+    - font-size
+    - line-height
+    - font-weight
+    - letter-spacing
+    - color
   */
   
   
@@ -451,10 +536,12 @@
     overflow: visible;
   }
   
+  
   .faq--wrapper
   > .w-dyn-item {
     overflow: visible;
   }
+  
   
   .faq--item {
     position: relative;
@@ -474,6 +561,7 @@
   
   .faq--question {
     position: relative;
+  
     z-index: 2;
   
     cursor: pointer;
@@ -513,7 +601,14 @@
   
   
   /* --------------------------------------------------------------------------
-     OPEN
+     OPEN STATE
+  
+     Shadow :
+     X       0
+     Y       0
+     Blur    100
+     Spread  0
+     Color   #CFF4FF
   -------------------------------------------------------------------------- */
   
   .faq--item.is--open {
@@ -521,6 +616,7 @@
       0 0 100px 0
       #cff4ff !important;
   }
+  
   
   .faq--item.is--open
   .faq--answer {
