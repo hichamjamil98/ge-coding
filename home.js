@@ -94,18 +94,25 @@
     /* ==========================================================================
        2. METIER CARDS
   
-       Important:
+       Existing Webflow structure:
   
-       JS DOES NOT modify:
-       - title color
-       - button background
-       - title transform
-       - button transform
-       - image
-       - mask
+       .metier--card
   
-       It ONLY reads the CMS color
-       and stores it in CSS variables.
+         img.image--absolute100
+  
+         .mask--82
+  
+         .metier--card-text
+  
+           .max--304
+             h3.heading-style-46
+  
+           .btn
+  
+       IMPORTANT:
+  
+       We only read the CMS color.
+       We do not modify image or mask.
     ========================================================================== */
   
     function initMetierCards() {
@@ -120,38 +127,84 @@
   
       cards.forEach((card) => {
   
+        const title = card.querySelector(
+          ".metier--card-text .heading-style-46"
+        );
+  
+  
         const button = card.querySelector(
           ".metier--card-text .btn"
         );
   
   
-        if (!button) return;
+        if (!button && !title) return;
   
   
   
         /* ======================================================================
-           GET CMS COLOR
+           1. READ CMS COLOR
   
-           Existing Webflow example:
-  
-           style="background-color:#ffdde4"
+           Priority:
+           button inline background-color
+           then title inline color
         ====================================================================== */
   
-        let color =
-          button.style.backgroundColor;
+        let cmsColor = "";
   
   
   
-        /* ----------------------------------------------------------------------
-           Fallback
-        ---------------------------------------------------------------------- */
+        /* Button CMS color */
   
-        if (!color) {
+        if (
+          button &&
+          button.style.backgroundColor
+        ) {
   
-          color =
+          cmsColor =
+            button.style.backgroundColor;
+  
+        }
+  
+  
+  
+        /* Title fallback */
+  
+        if (
+          !cmsColor &&
+          title &&
+          title.style.color
+        ) {
+  
+          cmsColor =
+            title.style.color;
+  
+        }
+  
+  
+  
+        /* Computed style fallback */
+  
+        if (
+          !cmsColor &&
+          button
+        ) {
+  
+          const computedBackground =
             window
               .getComputedStyle(button)
               .backgroundColor;
+  
+  
+          if (
+            computedBackground &&
+            computedBackground !== "transparent" &&
+            computedBackground !== "rgba(0, 0, 0, 0)"
+          ) {
+  
+            cmsColor =
+              computedBackground;
+  
+          }
   
         }
   
@@ -162,9 +215,9 @@
         ---------------------------------------------------------------------- */
   
         if (
-          !color ||
-          color === "transparent" ||
-          color === "rgba(0, 0, 0, 0)"
+          !cmsColor ||
+          cmsColor === "transparent" ||
+          cmsColor === "rgba(0, 0, 0, 0)"
         ) {
   
           return;
@@ -174,122 +227,55 @@
   
   
         /* ======================================================================
-           CSS VARIABLE — CMS COLOR
+           2. STORE CMS COLOR
+  
+           Example:
+  
+           --metier-color: rgb(255, 221, 228);
         ====================================================================== */
   
         card.style.setProperty(
           "--metier-color",
-          color
+          cmsColor
         );
   
   
   
         /* ======================================================================
-           SHADOW COLOR
+           3. REMOVE CMS INLINE COLORS
   
-           Same CMS color with exactly 20% opacity,
-           matching the Webflow shadow opacity.
+           Important:
+  
+           We already stored the CMS value.
+  
+           The initial state should now be controlled
+           entirely by Webflow.
+  
+           CMS color appears ONLY on hover.
         ====================================================================== */
   
-        const shadowColor =
-          createTransparentColor(
-            color,
-            0.2
+        if (title) {
+  
+          title.style.removeProperty(
+            "color"
           );
   
+        }
   
-        if (shadowColor) {
   
-          card.style.setProperty(
-            "--metier-shadow-color",
-            shadowColor
+        if (button) {
+  
+          button.style.removeProperty(
+            "background-color"
+          );
+  
+          button.style.removeProperty(
+            "border-color"
           );
   
         }
   
       });
-  
-    }
-  
-  
-  
-    /* ==========================================================================
-       COLOR NORMALIZER
-    ========================================================================== */
-  
-    function createTransparentColor(
-      color,
-      alpha = 0.2
-    ) {
-  
-      if (!color) return null;
-  
-  
-      const temp =
-        document.createElement("span");
-  
-  
-      temp.style.color = color;
-  
-      temp.style.position = "absolute";
-  
-      temp.style.visibility = "hidden";
-  
-      temp.style.pointerEvents = "none";
-  
-  
-      document.body.appendChild(temp);
-  
-  
-      const computedColor =
-        window
-          .getComputedStyle(temp)
-          .color;
-  
-  
-      temp.remove();
-  
-  
-  
-      /* ------------------------------------------------------------------------
-         Extract RGB
-      ------------------------------------------------------------------------ */
-  
-      const values =
-        computedColor.match(
-          /[\d.]+/g
-        );
-  
-  
-      if (
-        !values ||
-        values.length < 3
-      ) {
-  
-        return null;
-  
-      }
-  
-  
-      const r =
-        Math.round(
-          Number(values[0])
-        );
-  
-  
-      const g =
-        Math.round(
-          Number(values[1])
-        );
-  
-  
-      const b =
-        Math.round(
-          Number(values[2])
-        );
-  
-  
-      return `rgba(${r}, ${g}, ${b}, ${alpha})`;
   
     }
   
@@ -310,9 +296,9 @@
   
   
   
-      /* ------------------------------------------------------------------------
-         Check Swiper
-      ------------------------------------------------------------------------ */
+      /* ==========================================================================
+         SWIPER CHECK
+      ========================================================================== */
   
       if (typeof Swiper === "undefined") {
   
@@ -326,9 +312,9 @@
   
   
   
-      /* ------------------------------------------------------------------------
-         Init
-      ------------------------------------------------------------------------ */
+      /* ==========================================================================
+         INIT
+      ========================================================================== */
   
       sliders.forEach((slider) => {
   
@@ -412,6 +398,8 @@
             breakpoints: {
   
   
+              /* Mobile landscape */
+  
               480: {
   
                 slidesPerView: 1.4,
@@ -420,6 +408,8 @@
   
               },
   
+  
+              /* Tablet */
   
               768: {
   
@@ -430,6 +420,8 @@
               },
   
   
+              /* Desktop */
+  
               992: {
   
                 slidesPerView: 3,
@@ -438,6 +430,8 @@
   
               },
   
+  
+              /* Large desktop */
   
               1440: {
   

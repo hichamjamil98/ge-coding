@@ -36,9 +36,9 @@
   }
   
   
-  /* --------------------------------------------------------------------------
-     Hover
-  -------------------------------------------------------------------------- */
+  /* ==========================================================================
+     ECOLES — HOVER
+  ========================================================================== */
   
   @media (hover: hover) and (pointer: fine) {
   
@@ -94,9 +94,9 @@
   }
   
   
-  /* --------------------------------------------------------------------------
-     Keyboard
-  -------------------------------------------------------------------------- */
+  /* ==========================================================================
+     ECOLES — KEYBOARD
+  ========================================================================== */
   
   .is--home-subhero
   .groupe--ecole-item:focus-within
@@ -126,23 +126,20 @@
   
   .metier--card {
     --metier-color: transparent;
-    --metier-shadow-color: rgba(0, 0, 0, 0.2);
   
     transition:
-      box-shadow 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+      box-shadow 0.55s cubic-bezier(0.22, 1, 0.36, 1);
   }
   
   
-  /*
-    IMPORTANT
+  /* ==========================================================================
+     IMPORTANT
   
-    Aucun style appliqué à :
-    .mask--82
-    .image--absolute100
-  
-    Donc aucun changement du gradient existant
-    et aucun zoom image.
-  */
+     - no image zoom
+     - no image transform
+     - no modification of .mask--82
+     - Webflow keeps the original layout
+  ========================================================================== */
   
   
   /* ==========================================================================
@@ -152,8 +149,6 @@
   .metier--card
   .metier--card-text
   .heading-style-46 {
-    color: #ffffff !important;
-  
     transform: translateX(0);
   
     transition:
@@ -179,7 +174,11 @@
       border-color 0.35s ease,
       color 0.35s ease;
   
-    will-change: transform, background-color;
+    will-change:
+      transform,
+      background-color,
+      border-color,
+      color;
   }
   
   
@@ -190,28 +189,29 @@
   @media (hover: hover) and (pointer: fine) {
   
     /*
-      Shadow Webflow original:
+      Exact Webflow shadow:
   
-      X      0px
-      Y      2px
-      Blur   5px
-      Spread 0px
+      X      = 0px
+      Y      = 0px
+      Blur   = 100px
+      Size   = 40px
+      Type   = Outside
   
-      Seule la couleur change.
+      ONLY the color comes from CMS.
     */
   
     .metier--card:hover {
       box-shadow:
-        0px 2px 5px 0px
-        var(--metier-shadow-color) !important;
+        0px 0px 100px 40px
+        var(--metier-color) !important;
     }
   
   
-    /*
-      Title
-      → RIGHT 8px
-      → CMS color
-    */
+    /* ------------------------------------------------------------------------
+       Title
+       → RIGHT 8px
+       → CMS text color
+    ------------------------------------------------------------------------ */
   
     .metier--card:hover
     .metier--card-text
@@ -222,11 +222,11 @@
     }
   
   
-    /*
-      Button
-      → LEFT 8px
-      → CMS background color
-    */
+    /* ------------------------------------------------------------------------
+       Button
+       → LEFT 8px
+       → CMS background color
+    ------------------------------------------------------------------------ */
   
     .metier--card:hover
     .metier--card-text
