@@ -1,104 +1,30 @@
-/* ==========================================================================
-   GE — HOME PAGE
-========================================================================== */
+/* =========================================================
+   HOME
+========================================================= */
 
 
-/* ==========================================================================
-   1. HOME SUBHERO — ECOLES
-========================================================================== */
+/* =========================================================
+   SCHOOL CARDS / GLASS
+========================================================= */
 
-.is--home-subhero .ecole--list-hover {
+.groupe--ecole-item {
+    position: relative;
+  }
+  
+  .ecole--list-hover {
     opacity: 0;
     visibility: hidden;
     pointer-events: none;
   
-    transform: translateY(0.75rem);
+    transform: translateY(1rem);
   
     transition:
-      opacity 0.45s cubic-bezier(0.22, 1, 0.36, 1),
-      transform 0.55s cubic-bezier(0.22, 1, 0.36, 1),
-      visibility 0s linear 0.45s;
-  
-    will-change: opacity, transform;
+      opacity 0.35s ease,
+      transform 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+      visibility 0s linear 0.35s;
   }
   
-  
-  .is--home-subhero .ecole--hover-link {
-    opacity: 0;
-    transform: translateY(0.4rem);
-  
-    transition:
-      opacity 0.4s ease,
-      transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
-  
-    will-change: opacity, transform;
-  }
-  
-  
-  /* --------------------------------------------------------------------------
-     ECOLES — HOVER
-  -------------------------------------------------------------------------- */
-  
-  @media (hover: hover) and (pointer: fine) {
-  
-    .is--home-subhero
-    .groupe--ecole-item:hover
-    .ecole--list-hover {
-      opacity: 1;
-      visibility: visible;
-      pointer-events: auto;
-  
-      transform: translateY(0);
-  
-      transition-delay: 0s;
-    }
-  
-  
-    .is--home-subhero
-    .groupe--ecole-item:hover
-    .ecole--hover-link {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  
-  
-    .is--home-subhero
-    .groupe--ecole-item:hover
-    .ecole--hover-link:nth-child(1) {
-      transition-delay: 0.04s;
-    }
-  
-  
-    .is--home-subhero
-    .groupe--ecole-item:hover
-    .ecole--hover-link:nth-child(2) {
-      transition-delay: 0.08s;
-    }
-  
-  
-    .is--home-subhero
-    .groupe--ecole-item:hover
-    .ecole--hover-link:nth-child(3) {
-      transition-delay: 0.12s;
-    }
-  
-  
-    .is--home-subhero
-    .groupe--ecole-item:hover
-    .ecole--hover-link:nth-child(4) {
-      transition-delay: 0.16s;
-    }
-  
-  }
-  
-  
-  /* --------------------------------------------------------------------------
-     ECOLES — KEYBOARD
-  -------------------------------------------------------------------------- */
-  
-  .is--home-subhero
-  .groupe--ecole-item:focus-within
-  .ecole--list-hover {
+  .groupe--ecole-item.is--active .ecole--list-hover {
     opacity: 1;
     visibility: visible;
     pointer-events: auto;
@@ -109,165 +35,49 @@
   }
   
   
-  .is--home-subhero
-  .groupe--ecole-item:focus-within
-  .ecole--hover-link {
-    opacity: 1;
-    transform: translateY(0);
+  /* =========================================================
+     METIER CARDS
+  ========================================================= */
+  
+  .metier--card-parent {
+    position: relative;
+  
+    /* Important : permet au shadow de sortir */
+    overflow: visible;
   }
-  
-  
-  /* ==========================================================================
-     2. METIERS
-  ========================================================================== */
   
   .metier--card {
-    --metier-color: transparent;
+    position: relative;
   
     transition:
-      box-shadow 0.55s cubic-bezier(0.22, 1, 0.36, 1);
-  }
+      transform 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+      box-shadow 0.45s cubic-bezier(0.22, 1, 0.36, 1);
   
-  
-  /* --------------------------------------------------------------------------
-     TITLE
-  -------------------------------------------------------------------------- */
-  
-  .metier--card
-  .metier--card-text
-  .heading-style-40 {
-    transform: translateX(0);
-  
-    transition:
-      transform 0.5s cubic-bezier(0.22, 1, 0.36, 1),
-      color 0.35s ease;
-  
-    will-change:
-      transform,
-      color;
-  }
-  
-  
-  /* --------------------------------------------------------------------------
-     BUTTON
-  -------------------------------------------------------------------------- */
-  
-  .metier--card
-  .metier--card-text
-  .btn {
-    transform: translateX(0);
-  
-    transition:
-      transform 0.5s cubic-bezier(0.22, 1, 0.36, 1),
-      background-color 0.35s ease,
-      border-color 0.35s ease,
-      color 0.35s ease;
-  
-    will-change:
-      transform,
-      background-color,
-      border-color,
-      color;
-  }
-  
-  
-  /* --------------------------------------------------------------------------
-     HOVER
-  -------------------------------------------------------------------------- */
-  
-  @media (hover: hover) and (pointer: fine) {
-  
-    .metier--card:hover {
-      box-shadow:
-        0 0 100px 40px
-        var(--metier-color) !important;
-    }
-  
-  
-    .metier--card:hover
-    .metier--card-text
-    .heading-style-40 {
-      transform: translateX(8px);
-  
-      color: var(--metier-color) !important;
-    }
-  
-  
-    .metier--card:hover
-    .metier--card-text
-    .btn {
-      transform: translateX(-8px);
-  
-      background-color: var(--metier-color) !important;
-      border-color: var(--metier-color) !important;
-    }
-  
-  }
-  
-  
-  /* ==========================================================================
-     3. MEDIA SLIDER
-  ========================================================================== */
-  
-  .swiper.is--media {
-    width: 100%;
-    overflow: visible;
-  
-    cursor: grab;
-  }
-  
-  
-  .swiper.is--media:active {
-    cursor: grabbing;
-  }
-  
-  
-  .swiper.is--media .swiper-wrapper {
-    display: flex;
-  
-    gap: 2rem;
-  
-    overflow: visible;
-  }
-  
-  
-  .swiper.is--media .swiper-slide {
-    flex-shrink: 0;
-  
-    width: auto;
-    height: auto;
-  
-    margin-right: 0 !important;
-  }
-  
-  
-  .swiper.is--media .media--card {
-    height: 100%;
-  }
-  
-  
-  .swiper.is--media img {
-    user-select: none;
-    -webkit-user-drag: none;
+    will-change: transform, box-shadow;
   }
   
   
   /*
-    IMPORTANT:
-    aucune règle sur .heading-style-20
+  Le JS récupère automatiquement le background-color
+  de chaque .metier--card et crée --metier-shadow-color
   */
   
+  .metier--card-parent:hover .metier--card {
+    transform: translateY(-0.35rem);
   
-  /* ==========================================================================
-     4. ACTUALITES FILTER
-  ========================================================================== */
+    box-shadow:
+      0 1.5rem 3.5rem
+      var(--metier-shadow-color, rgba(0, 0, 0, 0.15));
+  }
+  
+  
+  /* =========================================================
+     FILTERS
+  ========================================================= */
   
   .faq--filter {
     position: relative;
   }
-  
-  
-  /* Trigger */
   
   .actualite--filter-trigger {
     cursor: pointer;
@@ -276,9 +86,12 @@
   }
   
   
-  /* Dropdown */
+  /* ---------------------------------------------------------
+     DROPDOWNS
+  --------------------------------------------------------- */
   
-  .actualites--filter-drop {
+  .actualites--filter-drop,
+  .media--filter-drop {
     opacity: 0;
     visibility: hidden;
     pointer-events: none;
@@ -286,20 +99,16 @@
     transform: translateY(0.5rem);
   
     transition:
-      opacity 0.3s ease,
-      transform 0.4s cubic-bezier(0.22, 1, 0.36, 1),
-      visibility 0s linear 0.3s;
-  
-    will-change:
-      opacity,
-      transform;
+      opacity 0.25s ease,
+      transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+      visibility 0s linear 0.35s;
   }
   
   
-  /* Open */
+  /* OPEN */
   
-  .faq--filter.is--open
-  .actualites--filter-drop {
+  .faq--filter.is--open .actualites--filter-drop,
+  .faq--filter.is--open .media--filter-drop {
     opacity: 1;
     visibility: visible;
     pointer-events: auto;
@@ -310,54 +119,176 @@
   }
   
   
-  /* Arrow */
+  /* ---------------------------------------------------------
+     FILTER ARROW
+  --------------------------------------------------------- */
   
   .faq--filter-arrow {
     transform-origin: center;
   
     transition:
       transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
-  
-    will-change: transform;
   }
   
-  
-  .faq--filter.is--open
-  .faq--filter-arrow {
+  .faq--filter.is--open .faq--filter-arrow {
     transform: rotate(180deg);
   }
   
   
-  /* Selected option */
+  /* ---------------------------------------------------------
+     FILTER OPTIONS
+  --------------------------------------------------------- */
   
-  .actualites--filter-drop
-  .filter--link.is--active {
-    opacity: 0.55;
+  .filter--link,
+  .media--filter-drop [filter="text"] {
+    cursor: pointer;
   
-    pointer-events: none;
+    transition: opacity 0.2s ease;
+  }
+  
+  .filter--link:hover,
+  .media--filter-drop [filter="text"]:hover {
+    opacity: 0.6;
+  }
+  
+  .filter--link.is--active,
+  .media--filter-drop [filter="text"].is--active {
+    opacity: 0.5;
   }
   
   
-  /* ==========================================================================
-     5. FAQ
-  ========================================================================== */
+  /*
+  Valeur CMS servant uniquement au filtrage
+  */
   
-  .faq--item {
-    overflow: hidden;
+  .filter--result {
+    display: none !important;
+  }
   
-    box-shadow: none !important;
+  
+  /* =========================================================
+     ACTUALITES
+  ========================================================= */
+  
+  .grid--2cl.is--actualites > .w-dyn-item {
+    transition:
+      opacity 0.3s ease,
+      transform 0.3s ease;
+  }
+  
+  
+  /* =========================================================
+     MEDIA SWIPER
+  ========================================================= */
+  
+  /*
+  On laisse dépasser les shadows.
+  La section continue de gérer l'overflow horizontal.
+  */
+  
+  .section.is--home-slider {
+    overflow-x: clip;
+    overflow-y: visible;
+  }
+  
+  .swiper.is--media {
+    overflow: visible !important;
+  
+    /*
+    Espace vertical pour éviter que
+    les shadows soient coupés.
+    */
+  
+    padding-top: 2rem;
+    padding-bottom: 3rem;
+  }
+  
+  
+  /*
+  IMPORTANT :
+  Swiper ne décide pas de la largeur.
+  
+  La largeur définie dans Webflow reste utilisée.
+  */
+  
+  .swiper.is--media .swiper-slide {
+    width: auto;
+    flex-shrink: 0;
+  }
+  
+  
+  /*
+  NE PAS définir :
+  font-size
+  font-weight
+  line-height
+  letter-spacing
+  etc.
+  
+  Le heading conserve exactement
+  heading-style-20 de Webflow.
+  */
+  
+  .swiper.is--media .heading-style-20 {
+    /* volontairement vide */
+  }
+  
+  
+  /* Media card */
+  
+  .media--card {
+    position: relative;
   
     transition:
-      box-shadow 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+      transform 0.4s cubic-bezier(0.22, 1, 0.36, 1),
+      box-shadow 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  
+  
+  /* =========================================================
+     FAQ
+  ========================================================= */
+  
+  .faq--wrapper {
+    overflow: visible;
+  }
+  
+  .faq--wrapper > .w-dyn-item {
+    overflow: visible;
+  }
+  
+  .faq--item {
+    position: relative;
+  
+    box-shadow: none;
+  
+    transition:
+      box-shadow 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  
+  
+  /*
+  Shadow uniquement lorsque FAQ ouverte
+  */
+  
+  .faq--item.is--open {
+    box-shadow:
+      0 1.25rem 3.5rem
+      rgba(190, 220, 255, 0.65);
   }
   
   
   .faq--question {
-    cursor: pointer;
+    position: relative;
+    z-index: 2;
   
-    -webkit-tap-highlight-color: transparent;
+    cursor: pointer;
   }
   
+  
+  /* ---------------------------------------------------------
+     FAQ ANSWER
+  --------------------------------------------------------- */
   
   .faq--answer {
     height: 0;
@@ -366,59 +297,20 @@
     overflow: hidden;
   
     pointer-events: none;
-  
-    will-change:
-      height,
-      opacity;
   }
   
+  
+  /* ---------------------------------------------------------
+     FAQ ARROW
+  --------------------------------------------------------- */
   
   .faq--arrow {
     transform-origin: center;
   
-    will-change: transform;
+    transition:
+      transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
   }
   
-  
-  .faq--item.is--open {
-    box-shadow:
-      0 0 100px 0
-      #cff4ff !important;
-  }
-  
-  
-  .faq--item.is--open
-  .faq--answer {
-    pointer-events: auto;
-  }
-  
-  
-  /* ==========================================================================
-     6. REDUCED MOTION
-  ========================================================================== */
-  
-  @media (prefers-reduced-motion: reduce) {
-  
-    .is--home-subhero .ecole--list-hover,
-    .is--home-subhero .ecole--hover-link,
-    .metier--card,
-    .metier--card .metier--card-text .heading-style-40,
-    .metier--card .metier--card-text .btn,
-    .actualites--filter-drop,
-    .faq--filter-arrow,
-    .faq--item {
-      transition-duration: 0.01ms !important;
-    }
-  
-  
-    .metier--card:hover
-    .metier--card-text
-    .heading-style-40,
-  
-    .metier--card:hover
-    .metier--card-text
-    .btn {
-      transform: none !important;
-    }
-  
+  .faq--item.is--open .faq--arrow {
+    transform: rotate(180deg);
   }
