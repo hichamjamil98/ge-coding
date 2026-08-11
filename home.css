@@ -1,30 +1,111 @@
-/* =========================================================
-   HOME
-========================================================= */
+/* ==========================================================================
+   GE — HOME
+========================================================================== */
 
 
-/* =========================================================
-   SCHOOL CARDS / GLASS
-========================================================= */
+/* ==========================================================================
+   1. HOME SUBHERO — ECOLES
+========================================================================== */
 
-.groupe--ecole-item {
+.is--home-subhero .groupe--ecole-item {
     position: relative;
   }
   
-  .ecole--list-hover {
+  
+  .is--home-subhero .ecole--list-hover {
     opacity: 0;
     visibility: hidden;
     pointer-events: none;
   
-    transform: translateY(1rem);
+    transform: translateY(0.75rem);
+  
+    transition:
+      opacity 0.4s ease,
+      transform 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+      visibility 0s linear 0.4s;
+  
+    will-change:
+      opacity,
+      transform;
+  }
+  
+  
+  .is--home-subhero .ecole--hover-link {
+    opacity: 0;
+  
+    transform: translateY(0.35rem);
   
     transition:
       opacity 0.35s ease,
-      transform 0.45s cubic-bezier(0.22, 1, 0.36, 1),
-      visibility 0s linear 0.35s;
+      transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+  
+    will-change:
+      opacity,
+      transform;
   }
   
-  .groupe--ecole-item.is--active .ecole--list-hover {
+  
+  /* Desktop */
+  
+  @media (hover: hover) and (pointer: fine) {
+  
+    .is--home-subhero
+    .groupe--ecole-item:hover
+    .ecole--list-hover {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+  
+      transform: translateY(0);
+  
+      transition-delay: 0s;
+    }
+  
+  
+    .is--home-subhero
+    .groupe--ecole-item:hover
+    .ecole--hover-link {
+      opacity: 1;
+  
+      transform: translateY(0);
+    }
+  
+  
+    .is--home-subhero
+    .groupe--ecole-item:hover
+    .ecole--hover-link:nth-child(1) {
+      transition-delay: 0.03s;
+    }
+  
+  
+    .is--home-subhero
+    .groupe--ecole-item:hover
+    .ecole--hover-link:nth-child(2) {
+      transition-delay: 0.06s;
+    }
+  
+  
+    .is--home-subhero
+    .groupe--ecole-item:hover
+    .ecole--hover-link:nth-child(3) {
+      transition-delay: 0.09s;
+    }
+  
+  
+    .is--home-subhero
+    .groupe--ecole-item:hover
+    .ecole--hover-link:nth-child(4) {
+      transition-delay: 0.12s;
+    }
+  
+  }
+  
+  
+  /* Keyboard */
+  
+  .is--home-subhero
+  .groupe--ecole-item:focus-within
+  .ecole--list-hover {
     opacity: 1;
     visibility: visible;
     pointer-events: auto;
@@ -35,63 +116,190 @@
   }
   
   
-  /* =========================================================
-     METIER CARDS
-  ========================================================= */
+  .is--home-subhero
+  .groupe--ecole-item:focus-within
+  .ecole--hover-link {
+    opacity: 1;
+  
+    transform: translateY(0);
+  }
+  
+  
+  /* ==========================================================================
+     2. METIERS
+  ========================================================================== */
   
   .metier--card-parent {
     position: relative;
   
-    /* Important : permet au shadow de sortir */
     overflow: visible;
   }
   
+  
   .metier--card {
-    position: relative;
+    --metier-color: transparent;
+  
+    /*
+      Ne touche pas au layout,
+      à l'image ou au mask.
+    */
   
     transition:
-      transform 0.45s cubic-bezier(0.22, 1, 0.36, 1),
-      box-shadow 0.45s cubic-bezier(0.22, 1, 0.36, 1);
-  
-    will-change: transform, box-shadow;
+      box-shadow 0.5s cubic-bezier(0.22, 1, 0.36, 1);
   }
   
+  
+  /* --------------------------------------------------------------------------
+     TITLE
+  -------------------------------------------------------------------------- */
+  
+  .metier--card
+  .metier--card-text
+  .heading-style-40 {
+    transform: translateX(0);
+  
+    transition:
+      transform 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+      color 0.35s ease;
+  
+    will-change:
+      transform,
+      color;
+  }
+  
+  
+  /* --------------------------------------------------------------------------
+     BUTTON
+  -------------------------------------------------------------------------- */
+  
+  .metier--card
+  .metier--card-text
+  .btn {
+    transform: translateX(0);
+  
+    transition:
+      transform 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+      background-color 0.35s ease,
+      border-color 0.35s ease,
+      color 0.35s ease;
+  
+    will-change:
+      transform,
+      background-color,
+      border-color,
+      color;
+  }
+  
+  
+  /* --------------------------------------------------------------------------
+     HOVER
+  -------------------------------------------------------------------------- */
+  
+  @media (hover: hover) and (pointer: fine) {
+  
+    /*
+      Shadow:
+      0 / 0 / 100 / 40
+  
+      Couleur = background-color CMS
+      de .metier--card
+    */
+  
+    .metier--card:hover {
+      box-shadow:
+        0 0 100px 40px
+        var(--metier-color) !important;
+    }
+  
+  
+    /* Title → RIGHT */
+  
+    .metier--card:hover
+    .metier--card-text
+    .heading-style-40 {
+      transform: translateX(8px);
+  
+      color: var(--metier-color) !important;
+    }
+  
+  
+    /* Button → LEFT */
+  
+    .metier--card:hover
+    .metier--card-text
+    .btn {
+      transform: translateX(-8px);
+  
+      background-color: var(--metier-color) !important;
+      border-color: var(--metier-color) !important;
+    }
+  
+  }
+  
+  
+  /* ==========================================================================
+     3. FILTERS — GLOBAL
+  ========================================================================== */
   
   /*
-  Le JS récupère automatiquement le background-color
-  de chaque .metier--card et crée --metier-shadow-color
+    filter--top doit créer un contexte supérieur
+    aux grids/sliders placés en dessous.
   */
   
-  .metier--card-parent:hover .metier--card {
-    transform: translateY(-0.35rem);
+  .filter--top {
+    position: relative;
   
-    box-shadow:
-      0 1.5rem 3.5rem
-      var(--metier-shadow-color, rgba(0, 0, 0, 0.15));
+    z-index: 50;
+  
+    overflow: visible;
   }
   
-  
-  /* =========================================================
-     FILTERS
-  ========================================================= */
   
   .faq--filter {
     position: relative;
+  
+    z-index: 1;
+  
+    overflow: visible;
   }
   
+  
+  .faq--filter.is--open {
+    z-index: 1000;
+  }
+  
+  
+  /* --------------------------------------------------------------------------
+     TRIGGER
+  -------------------------------------------------------------------------- */
+  
   .actualite--filter-trigger {
+    position: relative;
+  
+    z-index: 2;
+  
     cursor: pointer;
   
     -webkit-tap-highlight-color: transparent;
   }
   
   
-  /* ---------------------------------------------------------
+  /* --------------------------------------------------------------------------
      DROPDOWNS
-  --------------------------------------------------------- */
   
-  .actualites--filter-drop,
-  .media--filter-drop {
+     IMPORTANT:
+     Dans ton HTML actuel Actualités ET Médias
+     utilisent .actualites--filter-drop.
+  -------------------------------------------------------------------------- */
+  
+  .actualites--filter-drop {
+    position: absolute;
+  
+    top: calc(100% + 0.5rem);
+    right: 0;
+  
+    z-index: 1001;
+  
     opacity: 0;
     visibility: hidden;
     pointer-events: none;
@@ -99,16 +307,18 @@
     transform: translateY(0.5rem);
   
     transition:
-      opacity 0.25s ease,
-      transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
-      visibility 0s linear 0.35s;
+      opacity 0.28s ease,
+      transform 0.4s cubic-bezier(0.22, 1, 0.36, 1),
+      visibility 0s linear 0.4s;
+  
+    will-change:
+      opacity,
+      transform;
   }
   
   
-  /* OPEN */
-  
-  .faq--filter.is--open .actualites--filter-drop,
-  .faq--filter.is--open .media--filter-drop {
+  .faq--filter.is--open
+  .actualites--filter-drop {
     opacity: 1;
     visibility: visible;
     pointer-events: auto;
@@ -119,198 +329,287 @@
   }
   
   
-  /* ---------------------------------------------------------
-     FILTER ARROW
-  --------------------------------------------------------- */
+  /* --------------------------------------------------------------------------
+     ARROW
+  -------------------------------------------------------------------------- */
   
   .faq--filter-arrow {
     transform-origin: center;
   
     transition:
       transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+  
+    will-change: transform;
   }
   
-  .faq--filter.is--open .faq--filter-arrow {
+  
+  .faq--filter.is--open
+  .faq--filter-arrow {
     transform: rotate(180deg);
   }
   
   
-  /* ---------------------------------------------------------
-     FILTER OPTIONS
-  --------------------------------------------------------- */
+  /* --------------------------------------------------------------------------
+     OPTIONS
+  -------------------------------------------------------------------------- */
   
-  .filter--link,
-  .media--filter-drop [filter="text"] {
+  .actualites--filter-drop
+  [filter="text"] {
     cursor: pointer;
   
-    transition: opacity 0.2s ease;
+    transition:
+      opacity 0.25s ease;
   }
   
-  .filter--link:hover,
-  .media--filter-drop [filter="text"]:hover {
+  
+  .actualites--filter-drop
+  [filter="text"]:hover {
     opacity: 0.6;
   }
   
-  .filter--link.is--active,
-  .media--filter-drop [filter="text"].is--active {
-    opacity: 0.5;
+  
+  .actualites--filter-drop
+  [filter="text"].is--active {
+    opacity: 0.45;
   }
   
   
-  /*
-  Valeur CMS servant uniquement au filtrage
-  */
+  /* CMS values — invisibles */
   
   .filter--result {
     display: none !important;
   }
   
   
-  /* =========================================================
-     ACTUALITES
-  ========================================================= */
+  /* ==========================================================================
+     4. ACTUALITES
+  ========================================================================== */
   
-  .grid--2cl.is--actualites > .w-dyn-item {
+  .grid--2cl.is--actualites {
+    position: relative;
+  
+    z-index: 1;
+  }
+  
+  
+  .grid--2cl.is--actualites
+  > .w-dyn-item {
     transition:
       opacity 0.3s ease,
       transform 0.3s ease;
   }
   
   
-  /* =========================================================
-     MEDIA SWIPER
-  ========================================================= */
-  
-  /*
-  On laisse dépasser les shadows.
-  La section continue de gérer l'overflow horizontal.
-  */
+  /* ==========================================================================
+     5. MEDIA SLIDER
+  ========================================================================== */
   
   .section.is--home-slider {
-    overflow-x: clip;
-    overflow-y: visible;
-  }
-  
-  .swiper.is--media {
-    overflow: visible !important;
-  
-    /*
-    Espace vertical pour éviter que
-    les shadows soient coupés.
-    */
-  
-    padding-top: 2rem;
-    padding-bottom: 3rem;
-  }
-  
-  
-  /*
-  IMPORTANT :
-  Swiper ne décide pas de la largeur.
-  
-  La largeur définie dans Webflow reste utilisée.
-  */
-  
-  .swiper.is--media .swiper-slide {
-    width: auto;
-    flex-shrink: 0;
-  }
-  
-  
-  /*
-  NE PAS définir :
-  font-size
-  font-weight
-  line-height
-  letter-spacing
-  etc.
-  
-  Le heading conserve exactement
-  heading-style-20 de Webflow.
-  */
-  
-  .swiper.is--media .heading-style-20 {
-    /* volontairement vide */
-  }
-  
-  
-  /* Media card */
-  
-  .media--card {
     position: relative;
   
-    transition:
-      transform 0.4s cubic-bezier(0.22, 1, 0.36, 1),
-      box-shadow 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+    /*
+      Pas hidden sinon les shadows seraient coupés.
+    */
+    overflow: visible;
   }
   
   
-  /* =========================================================
-     FAQ
-  ========================================================= */
+  /* Le header / filtre reste au-dessus du Swiper */
+  
+  .section.is--home-slider
+  .filter--top {
+    position: relative;
+  
+    z-index: 100;
+  }
+  
+  
+  /* --------------------------------------------------------------------------
+     SWIPER
+  -------------------------------------------------------------------------- */
+  
+  .swiper.is--media {
+    position: relative;
+  
+    z-index: 1;
+  
+    width: 100%;
+  
+    overflow: visible !important;
+  
+    cursor: grab;
+  }
+  
+  
+  .swiper.is--media:active {
+    cursor: grabbing;
+  }
+  
+  
+  /* --------------------------------------------------------------------------
+     WRAPPER
+  -------------------------------------------------------------------------- */
+  
+  .swiper.is--media
+  .swiper-wrapper {
+    display: flex;
+  
+    overflow: visible;
+  }
+  
+  
+  /* --------------------------------------------------------------------------
+     SLIDES
+  
+     Width reste contrôlée par Webflow.
+  -------------------------------------------------------------------------- */
+  
+  .swiper.is--media
+  .swiper-slide {
+    flex-shrink: 0;
+  
+    width: auto;
+  
+    height: auto;
+  }
+  
+  
+  /* --------------------------------------------------------------------------
+     MEDIA CARD
+  -------------------------------------------------------------------------- */
+  
+  .swiper.is--media
+  .media--card {
+    height: 100%;
+  }
+  
+  
+  /* Images */
+  
+  .swiper.is--media img {
+    user-select: none;
+  
+    -webkit-user-drag: none;
+  }
+  
+  
+  /*
+    AUCUNE règle sur .heading-style-20.
+    Webflow garde font-size, weight, line-height, etc.
+  */
+  
+  
+  /* ==========================================================================
+     6. FAQ
+  ========================================================================== */
   
   .faq--wrapper {
     overflow: visible;
   }
   
-  .faq--wrapper > .w-dyn-item {
+  
+  .faq--wrapper
+  > .w-dyn-item {
     overflow: visible;
   }
+  
   
   .faq--item {
     position: relative;
   
-    box-shadow: none;
+    overflow: visible;
+  
+    box-shadow: none !important;
   
     transition:
-      box-shadow 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+      box-shadow 0.45s cubic-bezier(0.22, 1, 0.36, 1);
   }
   
   
-  /*
-  Shadow uniquement lorsque FAQ ouverte
-  */
-  
-  .faq--item.is--open {
-    box-shadow:
-      0 1.25rem 3.5rem
-      rgba(190, 220, 255, 0.65);
-  }
-  
+  /* --------------------------------------------------------------------------
+     QUESTION
+  -------------------------------------------------------------------------- */
   
   .faq--question {
     position: relative;
+  
     z-index: 2;
   
     cursor: pointer;
+  
+    -webkit-tap-highlight-color: transparent;
   }
   
   
-  /* ---------------------------------------------------------
-     FAQ ANSWER
-  --------------------------------------------------------- */
+  /* --------------------------------------------------------------------------
+     ANSWER
+  -------------------------------------------------------------------------- */
   
   .faq--answer {
     height: 0;
+  
     opacity: 0;
   
     overflow: hidden;
   
     pointer-events: none;
+  
+    will-change:
+      height,
+      opacity;
   }
   
   
-  /* ---------------------------------------------------------
-     FAQ ARROW
-  --------------------------------------------------------- */
+  /* --------------------------------------------------------------------------
+     ARROW
+  -------------------------------------------------------------------------- */
   
   .faq--arrow {
     transform-origin: center;
   
-    transition:
-      transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+    will-change: transform;
   }
   
-  .faq--item.is--open .faq--arrow {
-    transform: rotate(180deg);
+  
+  /* --------------------------------------------------------------------------
+     OPEN
+  
+     Shadow exact:
+     X 0
+     Y 0
+     Blur 100
+     Spread 0
+     #CFF4FF
+  -------------------------------------------------------------------------- */
+  
+  .faq--item.is--open {
+    box-shadow:
+      0 0 100px 0
+      #cff4ff !important;
+  }
+  
+  
+  .faq--item.is--open
+  .faq--answer {
+    pointer-events: auto;
+  }
+  
+  
+  /* ==========================================================================
+     7. REDUCED MOTION
+  ========================================================================== */
+  
+  @media (prefers-reduced-motion: reduce) {
+  
+    .ecole--list-hover,
+    .ecole--hover-link,
+    .metier--card,
+    .metier--card .heading-style-40,
+    .metier--card .btn,
+    .actualites--filter-drop,
+    .faq--filter-arrow,
+    .faq--item {
+      transition-duration: 0.01ms !important;
+    }
+  
   }

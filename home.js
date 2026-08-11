@@ -1,1234 +1,1585 @@
-/* =========================================================
-   HOME
-========================================================= */
-
-let mediaSwiper = null;
-let originalMediaSlides = [];
-
-
-/* =========================================================
-   HELPERS
-========================================================= */
-
-function normalizeText(text) {
-
-  return (text || "")
-    .trim()
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "");
-
-}
-
-
-/* =========================================================
-   SCHOOL CARDS
-========================================================= */
-
-function initSchoolCards() {
-
-  const cards =
-    document.querySelectorAll(".groupe--ecole-item");
-
-  if (!cards.length) return;
-
-
-  cards.forEach((card) => {
-
-    card.addEventListener("mouseenter", () => {
-
-      cards.forEach((otherCard) => {
-
-        if (otherCard !== card) {
-          otherCard.classList.remove("is--active");
-        }
-
-      });
-
-      card.classList.add("is--active");
-
-    });
-
-
-    card.addEventListener("mouseleave", () => {
-
-      card.classList.remove("is--active");
-
-    });
-
-  });
-
-}
-
-
-/* =========================================================
-   METIER CARDS
-========================================================= */
-
-function initMetierCards() {
-
-  const cards =
-    document.querySelectorAll(".metier--card");
-
-  if (!cards.length) return;
-
-
-  cards.forEach((card) => {
-
-    const background =
-      window
-        .getComputedStyle(card)
-        .backgroundColor;
-
-
-    if (!background) return;
-
-
-    /*
-    rgb(213, 255, 217)
-    =>
-    rgba(213, 255, 217, .85)
-    */
-
-    const values =
-      background.match(/\d+/g);
-
-
-    if (!values || values.length < 3) return;
-
-
-    const shadowColor =
-      `rgba(${values[0]}, ${values[1]}, ${values[2]}, 0.85)`;
-
-
-    card.style.setProperty(
-      "--metier-shadow-color",
-      shadowColor
-    );
-
-  });
-
-}
-
-
-/* =========================================================
-   GENERIC FILTER
-========================================================= */
-
-function setupFilterTrigger(filter, trigger) {
-
-  if (!filter || !trigger) return;
-
-
-  trigger.setAttribute(
-    "role",
-    "button"
-  );
-
-  trigger.setAttribute(
-    "tabindex",
-    "0"
-  );
-
-  trigger.setAttribute(
-    "aria-expanded",
-    "false"
-  );
-
-
-  trigger.addEventListener("click", (event) => {
-
-    event.preventDefault();
-    event.stopPropagation();
-
-
-    const wasOpen =
-      filter.classList.contains("is--open");
-
-
-    closeAllFilters(filter);
-
-
-    if (!wasOpen) {
-
-      openFilter(filter);
-
+/* ==========================================================================
+   GE — HOME PAGE
+
+   Requires:
+   - GSAP
+   - Swiper
+========================================================================== */
+
+(() => {
+    "use strict";
+  
+  
+    let mediaSwiper = null;
+  
+    let originalMediaSlides = [];
+  
+  
+    /* ==========================================================================
+       HELPERS
+    ========================================================================== */
+  
+    function normalizeText(text) {
+  
+      return (text || "")
+        .trim()
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "");
+  
     }
-
-  });
-
-
-  trigger.addEventListener("keydown", (event) => {
-
-    if (
-      event.key === "Enter" ||
-      event.key === " "
+  
+  
+  
+    /* ==========================================================================
+       INIT
+    ========================================================================== */
+  
+    document.addEventListener(
+      "DOMContentLoaded",
+      () => {
+  
+        initSchoolCards();
+  
+        initMetierCards();
+  
+        /*
+          Important :
+          on sauvegarde les slides avant
+          que le filtre média les modifie.
+        */
+  
+        initMediaSlider();
+  
+        initFilters();
+  
+        initFAQ();
+  
+      }
+    );
+  
+  
+  
+    /* ==========================================================================
+       1. SCHOOL CARDS
+    ========================================================================== */
+  
+    function initSchoolCards() {
+  
+      const cards =
+        document.querySelectorAll(
+          ".is--home-subhero .groupe--ecole-item"
+        );
+  
+  
+      if (!cards.length) return;
+  
+  
+      cards.forEach((card) => {
+  
+        const overlay =
+          card.querySelector(
+            ".ecole--list-hover"
+          );
+  
+  
+        if (!overlay) return;
+  
+  
+        const links =
+          overlay.querySelectorAll("a");
+  
+  
+        links.forEach((link) => {
+  
+          link.addEventListener(
+            "focus",
+            () => {
+  
+              card.classList.add(
+                "is--keyboard-active"
+              );
+  
+            }
+          );
+  
+  
+          link.addEventListener(
+            "blur",
+            () => {
+  
+              requestAnimationFrame(() => {
+  
+                if (
+                  !card.contains(
+                    document.activeElement
+                  )
+                ) {
+  
+                  card.classList.remove(
+                    "is--keyboard-active"
+                  );
+  
+                }
+  
+              });
+  
+            }
+          );
+  
+        });
+  
+      });
+  
+    }
+  
+  
+  
+    /* ==========================================================================
+       2. METIER CARDS
+  
+       Couleur source :
+       background-color de .metier--card
+    ========================================================================== */
+  
+    function initMetierCards() {
+  
+      const cards =
+        document.querySelectorAll(
+          ".metier--card"
+        );
+  
+  
+      if (!cards.length) return;
+  
+  
+      cards.forEach((card) => {
+  
+        const color =
+          window
+            .getComputedStyle(card)
+            .backgroundColor;
+  
+  
+        if (
+          !color ||
+          color === "transparent" ||
+          color === "rgba(0, 0, 0, 0)"
+        ) {
+  
+          return;
+  
+        }
+  
+  
+        card.style.setProperty(
+          "--metier-color",
+          color
+        );
+  
+      });
+  
+    }
+  
+  
+  
+    /* ==========================================================================
+       3. GENERIC FILTER
+    ========================================================================== */
+  
+    function setupFilterTrigger(
+      filter,
+      trigger
     ) {
-
-      event.preventDefault();
-
-      trigger.click();
-
-    }
-
-
-    if (event.key === "Escape") {
-
-      closeFilter(filter);
-
-    }
-
-  });
-
-}
-
-
-/* =========================================================
-   OPEN FILTER
-========================================================= */
-
-function openFilter(filter) {
-
-  if (!filter) return;
-
-
-  filter.classList.add("is--open");
-
-
-  const trigger =
-    filter.querySelector(
-      ".actualite--filter-trigger"
-    );
-
-
-  trigger?.setAttribute(
-    "aria-expanded",
-    "true"
-  );
-
-}
-
-
-/* =========================================================
-   CLOSE FILTER
-========================================================= */
-
-function closeFilter(filter) {
-
-  if (!filter) return;
-
-
-  filter.classList.remove("is--open");
-
-
-  const trigger =
-    filter.querySelector(
-      ".actualite--filter-trigger"
-    );
-
-
-  trigger?.setAttribute(
-    "aria-expanded",
-    "false"
-  );
-
-}
-
-
-/* =========================================================
-   CLOSE ALL FILTERS
-========================================================= */
-
-function closeAllFilters(exception = null) {
-
-  document
-    .querySelectorAll(".faq--filter")
-    .forEach((filter) => {
-
-      if (filter !== exception) {
-
-        closeFilter(filter);
-
-      }
-
-    });
-
-}
-
-
-/* =========================================================
-   ACTUALITES FILTER
-========================================================= */
-
-function initActualitesFilter() {
-
-  const grid =
-    document.querySelector(
-      ".grid--2cl.is--actualites"
-    );
-
-
-  if (!grid) return;
-
-
-  const section =
-    grid.closest(".section");
-
-
-  if (!section) return;
-
-
-  const filter =
-    section.querySelector(".faq--filter");
-
-
-  const trigger =
-    filter?.querySelector(
-      ".actualite--filter-trigger"
-    );
-
-
-  const label =
-    filter?.querySelector(".filter--text");
-
-
-  const dropdown =
-    filter?.querySelector(
-      ".actualites--filter-drop"
-    );
-
-
-  const options =
-    dropdown?.querySelectorAll(
-      ".filter--link"
-    );
-
-
-  const items =
-    grid.querySelectorAll(
-      ":scope > .w-dyn-item"
-    );
-
-
-  if (
-    !filter ||
-    !trigger ||
-    !dropdown ||
-    !options?.length
-  ) return;
-
-
-  setupFilterTrigger(
-    filter,
-    trigger
-  );
-
-
-  options.forEach((option) => {
-
-    option.addEventListener(
-      "click",
-      (event) => {
-
-        event.preventDefault();
-        event.stopPropagation();
-
-
-        const selected =
-          option.textContent.trim();
-
-
-        const selectedNormalized =
-          normalizeText(selected);
-
-
-        /*
-        Change le texte du trigger
-        */
-
-        if (label) {
-
-          label.textContent = selected;
-
-        }
-
-
-        /*
-        Active state
-        */
-
-        options.forEach((item) => {
-
-          item.classList.remove(
-            "is--active"
-          );
-
-        });
-
-
-        option.classList.add(
-          "is--active"
-        );
-
-
-        /*
-        Filter CMS items
-
-        Actualités utilise :
-        filter="results"
-        */
-
-        items.forEach((item) => {
-
-          const result =
-            item.querySelector(
-              '[filter="results"]'
+  
+      if (!filter || !trigger) return;
+  
+  
+      trigger.setAttribute(
+        "role",
+        "button"
+      );
+  
+  
+      trigger.setAttribute(
+        "tabindex",
+        "0"
+      );
+  
+  
+      trigger.setAttribute(
+        "aria-expanded",
+        "false"
+      );
+  
+  
+      /* CLICK */
+  
+      trigger.addEventListener(
+        "click",
+        (event) => {
+  
+          event.preventDefault();
+  
+          event.stopPropagation();
+  
+  
+          const wasOpen =
+            filter.classList.contains(
+              "is--open"
             );
-
-
-          const value =
-            normalizeText(
-              result?.textContent
-            );
-
-
-          const show =
-            value === selectedNormalized;
-
-
-          item.style.display =
-            show ? "" : "none";
-
-        });
-
-
-        closeFilter(filter);
-
-      }
-    );
-
-  });
-
-}
-
-
-/* =========================================================
-   MEDIA — SAVE ORIGINAL SLIDES
-========================================================= */
-
-function saveOriginalMediaSlides() {
-
-  const slider =
-    document.querySelector(
-      ".swiper.is--media"
-    );
-
-
-  if (!slider) return;
-
-
-  const wrapper =
-    slider.querySelector(
-      ".swiper-wrapper"
-    );
-
-
-  if (!wrapper) return;
-
-
-  /*
-  Sauvegarde uniquement les vraies
-  slides Webflow.
-  */
-
-  originalMediaSlides =
-    Array
-      .from(
-        wrapper.children
-      )
-      .filter((slide) =>
-        slide.classList.contains(
-          "swiper-slide"
-        )
-      )
-      .map((slide) => {
-
-        const clone =
-          slide.cloneNode(true);
-
-
-        cleanSwiperSlide(clone);
-
-
-        return clone;
-
-      });
-
-}
-
-
-/* =========================================================
-   CLEAN SWIPER SLIDE
-========================================================= */
-
-function cleanSwiperSlide(slide) {
-
-  slide.classList.remove(
-    "swiper-slide-active",
-    "swiper-slide-next",
-    "swiper-slide-prev",
-    "swiper-slide-visible",
-    "swiper-slide-fully-visible"
-  );
-
-
-  slide.removeAttribute(
-    "data-swiper-slide-index"
-  );
-
-
-  slide.removeAttribute(
-    "aria-label"
-  );
-
-
-  slide.removeAttribute(
-    "role"
-  );
-
-
-  slide.style.removeProperty(
-    "width"
-  );
-
-
-  slide.style.removeProperty(
-    "margin-right"
-  );
-
-
-  slide.style.removeProperty(
-    "transform"
-  );
-
-}
-
-
-/* =========================================================
-   CREATE MEDIA SWIPER
-========================================================= */
-
-function createMediaSwiper() {
-
-  const slider =
-    document.querySelector(
-      ".swiper.is--media"
-    );
-
-
-  if (!slider) return;
-
-
-  if (typeof Swiper === "undefined") {
-
-    console.warn(
-      "Swiper is not loaded."
-    );
-
-    return;
-
-  }
-
-
-  const numberOfSlides =
-    slider.querySelectorAll(
-      ".swiper-wrapper > .swiper-slide"
-    ).length;
-
-
-  if (!numberOfSlides) return;
-
-
-  mediaSwiper =
-    new Swiper(
-      slider,
-      {
-
-        /*
-        IMPORTANT:
-        garde la largeur des slides
-        définie par Webflow
-        */
-
-        slidesPerView: "auto",
-
-
-        /*
-        Gap demandé : 2rem
-        Swiper attend des pixels.
-        */
-
-        spaceBetween: parseFloat(
-          getComputedStyle(
-            document.documentElement
-          ).fontSize
-        ) * 2,
-
-
-        slidesPerGroup: 1,
-
-
-        /*
-        Infinite loop réel
-        */
-
-        loop:
-          numberOfSlides > 1,
-
-
-        loopAdditionalSlides:
-          numberOfSlides,
-
-
-        speed: 750,
-
-
-        grabCursor: true,
-
-        allowTouchMove: true,
-
-        simulateTouch: true,
-
-        centeredSlides: false,
-
-
-        /*
-        Évite l'effet de blocage
-        */
-
-        watchOverflow: false,
-
-        observer: true,
-
-        observeParents: true,
-
-        resizeObserver: true,
-
-
-        /*
-        Pas d'autoplay ici.
-        Le loop est infini au drag.
-        */
-
-        autoplay: false
-
-      }
-    );
-
-}
-
-
-/* =========================================================
-   DESTROY MEDIA SWIPER
-========================================================= */
-
-function destroyMediaSwiper() {
-
-  if (!mediaSwiper) return;
-
-
-  mediaSwiper.destroy(
-    true,
-    true
-  );
-
-
-  mediaSwiper = null;
-
-}
-
-
-/* =========================================================
-   INIT MEDIA SLIDER
-========================================================= */
-
-function initMediaSlider() {
-
-  saveOriginalMediaSlides();
-
-  createMediaSwiper();
-
-}
-
-
-/* =========================================================
-   FILTER MEDIA
-========================================================= */
-
-function filterMediaSlides(selected) {
-
-  const slider =
-    document.querySelector(
-      ".swiper.is--media"
-    );
-
-
-  if (!slider) return;
-
-
-  const wrapper =
-    slider.querySelector(
-      ".swiper-wrapper"
-    );
-
-
-  if (!wrapper) return;
-
-
-  const selectedNormalized =
-    normalizeText(selected);
-
-
-  /*
-  IMPORTANT:
-  destroy avant modification du DOM
-  */
-
-  destroyMediaSwiper();
-
-
-  wrapper.innerHTML = "";
-
-
-  const matchingSlides =
-    originalMediaSlides.filter(
-      (slide) => {
-
-        /*
-        Média utilise :
-        filter="result"
-        */
-
-        const result =
-          slide.querySelector(
-            '[filter="result"]'
+  
+  
+          closeAllFilters(
+            filter
           );
-
-
-        const value =
-          normalizeText(
-            result?.textContent
-          );
-
-
-        return (
-          value ===
-          selectedNormalized
-        );
-
-      }
-    );
-
-
-  /*
-  Réinjecte les slides filtrées
-  */
-
-  matchingSlides.forEach(
-    (originalSlide) => {
-
-      const slide =
-        originalSlide.cloneNode(true);
-
-
-      cleanSwiperSlide(slide);
-
-
-      wrapper.appendChild(slide);
-
-    }
-  );
-
-
-  /*
-  Attend que le navigateur recalcule
-  les widths avant de recréer Swiper.
-  */
-
-  requestAnimationFrame(() => {
-
-    requestAnimationFrame(() => {
-
-      createMediaSwiper();
-
-    });
-
-  });
-
-}
-
-
-/* =========================================================
-   MEDIA FILTER
-========================================================= */
-
-function initMediaFilter() {
-
-  const section =
-    document.querySelector(
-      ".section.is--home-slider"
-    );
-
-
-  if (!section) return;
-
-
-  const filter =
-    section.querySelector(
-      ".faq--filter"
-    );
-
-
-  const trigger =
-    filter?.querySelector(
-      ".actualite--filter-trigger"
-    );
-
-
-  const label =
-    filter?.querySelector(
-      ".filter--text"
-    );
-
-
-  const dropdown =
-    filter?.querySelector(
-      ".media--filter-drop"
-    );
-
-
-  const options =
-    dropdown?.querySelectorAll(
-      '[filter="text"]'
-    );
-
-
-  if (
-    !filter ||
-    !trigger ||
-    !dropdown ||
-    !options?.length
-  ) return;
-
-
-  setupFilterTrigger(
-    filter,
-    trigger
-  );
-
-
-  options.forEach((option) => {
-
-    option.addEventListener(
-      "click",
-      (event) => {
-
-        event.preventDefault();
-        event.stopPropagation();
-
-
-        const selected =
-          option.textContent.trim();
-
-
-        /*
-        Change :
-        Filter par thèmes
-        =>
-        Thème X
-        */
-
-        if (label) {
-
-          label.textContent =
-            selected;
-
+  
+  
+          if (wasOpen) {
+  
+            closeFilter(filter);
+  
+          }
+  
+          else {
+  
+            openFilter(filter);
+  
+          }
+  
         }
-
-
-        /*
-        Active
-        */
-
-        options.forEach((item) => {
-
-          item.classList.remove(
-            "is--active"
-          );
-
-        });
-
-
-        option.classList.add(
-          "is--active"
+      );
+  
+  
+      /* KEYBOARD */
+  
+      trigger.addEventListener(
+        "keydown",
+        (event) => {
+  
+          if (
+            event.key === "Enter" ||
+            event.key === " "
+          ) {
+  
+            event.preventDefault();
+  
+            trigger.click();
+  
+          }
+  
+  
+          if (
+            event.key === "Escape"
+          ) {
+  
+            closeFilter(filter);
+  
+          }
+  
+        }
+      );
+  
+    }
+  
+  
+  
+    /* ==========================================================================
+       OPEN FILTER
+    ========================================================================== */
+  
+    function openFilter(filter) {
+  
+      if (!filter) return;
+  
+  
+      filter.classList.add(
+        "is--open"
+      );
+  
+  
+      const trigger =
+        filter.querySelector(
+          ".actualite--filter-trigger"
         );
-
-
-        /*
-        Filter slider
-        */
-
-        filterMediaSlides(
-          selected
+  
+  
+      trigger?.setAttribute(
+        "aria-expanded",
+        "true"
+      );
+  
+    }
+  
+  
+  
+    /* ==========================================================================
+       CLOSE FILTER
+    ========================================================================== */
+  
+    function closeFilter(filter) {
+  
+      if (!filter) return;
+  
+  
+      filter.classList.remove(
+        "is--open"
+      );
+  
+  
+      const trigger =
+        filter.querySelector(
+          ".actualite--filter-trigger"
         );
-
-
-        closeFilter(filter);
-
-      }
-    );
-
-  });
-
-}
-
-
-/* =========================================================
-   FILTER OUTSIDE CLICK
-========================================================= */
-
-function initFilterOutsideClick() {
-
-  document.addEventListener(
-    "click",
-    (event) => {
-
+  
+  
+      trigger?.setAttribute(
+        "aria-expanded",
+        "false"
+      );
+  
+    }
+  
+  
+  
+    /* ==========================================================================
+       CLOSE ALL FILTERS
+    ========================================================================== */
+  
+    function closeAllFilters(
+      exception = null
+    ) {
+  
       document
         .querySelectorAll(
-          ".faq--filter"
+          ".filter--top .faq--filter"
         )
         .forEach((filter) => {
-
+  
           if (
-            !filter.contains(
-              event.target
-            )
+            filter !== exception
           ) {
-
+  
             closeFilter(filter);
-
+  
           }
-
+  
         });
-
+  
     }
-  );
-
-
-  document.addEventListener(
-    "keydown",
-    (event) => {
-
+  
+  
+  
+    /* ==========================================================================
+       4. ACTUALITES FILTER
+    ========================================================================== */
+  
+    function initActualitesFilter() {
+  
+      const grid =
+        document.querySelector(
+          ".grid--2cl.is--actualites"
+        );
+  
+  
+      if (!grid) return;
+  
+  
+      const section =
+        grid.closest(".section");
+  
+  
+      if (!section) return;
+  
+  
+      const filter =
+        section.querySelector(
+          ".filter--top .faq--filter"
+        );
+  
+  
+      const trigger =
+        filter?.querySelector(
+          ".actualite--filter-trigger"
+        );
+  
+  
+      const label =
+        filter?.querySelector(
+          ".filter--text"
+        );
+  
+  
+      const dropdown =
+        filter?.querySelector(
+          ".actualites--filter-drop"
+        );
+  
+  
+      /*
+        Dans Actualités :
+        <a filter="text">
+      */
+  
+      const options =
+        dropdown?.querySelectorAll(
+          '[filter="text"]'
+        );
+  
+  
+      const items =
+        grid.querySelectorAll(
+          ":scope > .w-dyn-item"
+        );
+  
+  
       if (
-        event.key === "Escape"
+        !filter ||
+        !trigger ||
+        !dropdown ||
+        !options?.length
       ) {
-
-        closeAllFilters();
-
+  
+        return;
+  
       }
-
+  
+  
+      setupFilterTrigger(
+        filter,
+        trigger
+      );
+  
+  
+      options.forEach((option) => {
+  
+        option.addEventListener(
+          "click",
+          (event) => {
+  
+            event.preventDefault();
+  
+            event.stopPropagation();
+  
+  
+            const selected =
+              option.textContent.trim();
+  
+  
+            const selectedNormalized =
+              normalizeText(selected);
+  
+  
+  
+            /* ================================================================
+               UPDATE LABEL
+            ================================================================ */
+  
+            if (label) {
+  
+              label.textContent =
+                selected;
+  
+            }
+  
+  
+  
+            /* ================================================================
+               ACTIVE
+            ================================================================ */
+  
+            options.forEach(
+              (other) => {
+  
+                other.classList.remove(
+                  "is--active"
+                );
+  
+              }
+            );
+  
+  
+            option.classList.add(
+              "is--active"
+            );
+  
+  
+  
+            /* ================================================================
+               FILTER
+  
+               Actualités utilise :
+               filter="results"
+            ================================================================ */
+  
+            items.forEach((item) => {
+  
+              const result =
+                item.querySelector(
+                  '[filter="results"]'
+                );
+  
+  
+              const value =
+                normalizeText(
+                  result?.textContent
+                );
+  
+  
+              const show =
+                value ===
+                selectedNormalized;
+  
+  
+              item.style.display =
+                show ? "" : "none";
+  
+            });
+  
+  
+  
+            closeFilter(filter);
+  
+          }
+        );
+  
+      });
+  
     }
-  );
-
-}
-
-
-/* =========================================================
-   INIT FILTERS
-========================================================= */
-
-function initFilters() {
-
-  initActualitesFilter();
-
-  initMediaFilter();
-
-  initFilterOutsideClick();
-
-}
-
-
-/* =========================================================
-   FAQ
-========================================================= */
-
-function initFAQ() {
-
-  const items =
-    document.querySelectorAll(
-      ".faq--item"
-    );
-
-
-  if (!items.length) return;
-
-
-  items.forEach((item) => {
-
-    const question =
-      item.querySelector(
-        ".faq--question"
+  
+  
+  
+    /* ==========================================================================
+       5. MEDIA — SAVE ORIGINAL SLIDES
+    ========================================================================== */
+  
+    function saveOriginalMediaSlides() {
+  
+      const slider =
+        document.querySelector(
+          ".swiper.is--media"
+        );
+  
+  
+      if (!slider) return;
+  
+  
+      const wrapper =
+        slider.querySelector(
+          ".swiper-wrapper"
+        );
+  
+  
+      if (!wrapper) return;
+  
+  
+      originalMediaSlides =
+        Array
+          .from(wrapper.children)
+          .filter((slide) => {
+  
+            return slide.classList.contains(
+              "swiper-slide"
+            );
+  
+          })
+          .map((slide) => {
+  
+            const clone =
+              slide.cloneNode(true);
+  
+  
+            cleanSwiperSlide(clone);
+  
+  
+            return clone;
+  
+          });
+  
+    }
+  
+  
+  
+    /* ==========================================================================
+       CLEAN SWIPER SLIDE
+    ========================================================================== */
+  
+    function cleanSwiperSlide(slide) {
+  
+      slide.classList.remove(
+        "swiper-slide-active",
+        "swiper-slide-next",
+        "swiper-slide-prev",
+        "swiper-slide-visible",
+        "swiper-slide-fully-visible"
       );
-
-
-    const answer =
-      item.querySelector(
-        ".faq--answer"
+  
+  
+      slide.removeAttribute(
+        "data-swiper-slide-index"
       );
-
-
-    if (!question || !answer) return;
-
-
-    question.setAttribute(
-      "role",
-      "button"
-    );
-
-
-    question.setAttribute(
-      "tabindex",
-      "0"
-    );
-
-
-    question.setAttribute(
-      "aria-expanded",
-      "false"
-    );
-
-
-    /*
-    Initial state
-    */
-
-    gsap.set(
-      answer,
-      {
-
-        height: 0,
-
-        opacity: 0,
-
-        overflow: "hidden",
-
-        pointerEvents: "none"
-
+  
+  
+      slide.removeAttribute(
+        "aria-label"
+      );
+  
+  
+      slide.removeAttribute(
+        "aria-hidden"
+      );
+  
+  
+      slide.style.removeProperty(
+        "margin-right"
+      );
+  
+  
+      slide.style.removeProperty(
+        "transform"
+      );
+  
+  
+      slide.style.removeProperty(
+        "transition-duration"
+      );
+  
+    }
+  
+  
+  
+    /* ==========================================================================
+       GET 2REM IN PIXELS
+    ========================================================================== */
+  
+    function getMediaGap() {
+  
+      const rootFontSize =
+        parseFloat(
+          window
+            .getComputedStyle(
+              document.documentElement
+            )
+            .fontSize
+        );
+  
+  
+      return rootFontSize * 2;
+  
+    }
+  
+  
+  
+    /* ==========================================================================
+       CREATE MEDIA SWIPER
+    ========================================================================== */
+  
+    function createMediaSwiper() {
+  
+      const slider =
+        document.querySelector(
+          ".swiper.is--media"
+        );
+  
+  
+      if (!slider) return;
+  
+  
+      if (
+        typeof Swiper ===
+        "undefined"
+      ) {
+  
+        console.warn(
+          "GE Home: Swiper missing."
+        );
+  
+        return;
+  
       }
-    );
-
-
-    function toggleFAQ() {
-
-      const isOpen =
+  
+  
+      const slides =
+        slider.querySelectorAll(
+          ".swiper-wrapper > .swiper-slide"
+        );
+  
+  
+      if (!slides.length) return;
+  
+  
+      /*
+        Vrai loop infini.
+        Pas de rewind.
+      */
+  
+      mediaSwiper =
+        new Swiper(
+          slider,
+          {
+  
+            slidesPerView: "auto",
+  
+            slidesPerGroup: 1,
+  
+  
+            /*
+              Gap exact 2rem.
+            */
+  
+            spaceBetween:
+              getMediaGap(),
+  
+  
+            speed: 850,
+  
+  
+            /* ================================================================
+               TRUE LOOP
+            ================================================================ */
+  
+            loop:
+              slides.length > 1,
+  
+            loopAdditionalSlides:
+              slides.length,
+  
+  
+            /* ================================================================
+               AUTOPLAY
+            ================================================================ */
+  
+            autoplay:
+              slides.length > 1
+                ? {
+  
+                    delay: 2500,
+  
+                    disableOnInteraction:
+                      false,
+  
+                    pauseOnMouseEnter:
+                      true
+  
+                  }
+                : false,
+  
+  
+            centeredSlides: false,
+  
+  
+            grabCursor: true,
+  
+            allowTouchMove:
+              slides.length > 1,
+  
+            simulateTouch: true,
+  
+            touchRatio: 1,
+  
+            touchAngle: 45,
+  
+            threshold: 5,
+  
+  
+            resistance: true,
+  
+            resistanceRatio: 0.65,
+  
+  
+            watchOverflow: false,
+  
+  
+            observer: true,
+  
+            observeParents: true,
+  
+            resizeObserver: true
+  
+          }
+        );
+  
+    }
+  
+  
+  
+    /* ==========================================================================
+       DESTROY MEDIA SWIPER
+    ========================================================================== */
+  
+    function destroyMediaSwiper() {
+  
+      if (!mediaSwiper) return;
+  
+  
+      mediaSwiper.destroy(
+        true,
+        true
+      );
+  
+  
+      mediaSwiper = null;
+  
+    }
+  
+  
+  
+    /* ==========================================================================
+       INIT MEDIA SLIDER
+    ========================================================================== */
+  
+    function initMediaSlider() {
+  
+      saveOriginalMediaSlides();
+  
+      createMediaSwiper();
+  
+    }
+  
+  
+  
+    /* ==========================================================================
+       FILTER MEDIA SLIDES
+    ========================================================================== */
+  
+    function filterMediaSlides(
+      selected
+    ) {
+  
+      const slider =
+        document.querySelector(
+          ".swiper.is--media"
+        );
+  
+  
+      if (!slider) return;
+  
+  
+      const wrapper =
+        slider.querySelector(
+          ".swiper-wrapper"
+        );
+  
+  
+      if (!wrapper) return;
+  
+  
+      const selectedNormalized =
+        normalizeText(selected);
+  
+  
+  
+      /* ================================================================
+         DESTROY BEFORE DOM CHANGE
+      ================================================================ */
+  
+      destroyMediaSwiper();
+  
+  
+  
+      /* ================================================================
+         CLEAR
+      ================================================================ */
+  
+      wrapper.innerHTML = "";
+  
+  
+  
+      /* ================================================================
+         MATCH
+  
+         Médias utilise :
+         filter="result"
+      ================================================================ */
+  
+      const matchingSlides =
+        originalMediaSlides.filter(
+          (slide) => {
+  
+            const result =
+              slide.querySelector(
+                '[filter="result"]'
+              );
+  
+  
+            const value =
+              normalizeText(
+                result?.textContent
+              );
+  
+  
+            return (
+              value ===
+              selectedNormalized
+            );
+  
+          }
+        );
+  
+  
+  
+      /* ================================================================
+         INSERT MATCHES
+      ================================================================ */
+  
+      matchingSlides.forEach(
+        (originalSlide) => {
+  
+          const slide =
+            originalSlide.cloneNode(
+              true
+            );
+  
+  
+          cleanSwiperSlide(
+            slide
+          );
+  
+  
+          wrapper.appendChild(
+            slide
+          );
+  
+        }
+      );
+  
+  
+  
+      /* ================================================================
+         RECREATE
+      ================================================================ */
+  
+      requestAnimationFrame(() => {
+  
+        requestAnimationFrame(() => {
+  
+          createMediaSwiper();
+  
+        });
+  
+      });
+  
+    }
+  
+  
+  
+    /* ==========================================================================
+       6. MEDIA FILTER
+  
+       IMPORTANT:
+       ton HTML Media utilise actuellement
+       .actualites--filter-drop lui aussi.
+    ========================================================================== */
+  
+    function initMediaFilter() {
+  
+      const section =
+        document.querySelector(
+          ".section.is--home-slider"
+        );
+  
+  
+      if (!section) return;
+  
+  
+      const filter =
+        section.querySelector(
+          ".filter--top .faq--filter"
+        );
+  
+  
+      const trigger =
+        filter?.querySelector(
+          ".actualite--filter-trigger"
+        );
+  
+  
+      const label =
+        filter?.querySelector(
+          ".filter--text"
+        );
+  
+  
+      const dropdown =
+        filter?.querySelector(
+          ".actualites--filter-drop"
+        );
+  
+  
+      const options =
+        dropdown?.querySelectorAll(
+          '[filter="text"]'
+        );
+  
+  
+      if (
+        !filter ||
+        !trigger ||
+        !dropdown ||
+        !options?.length
+      ) {
+  
+        return;
+  
+      }
+  
+  
+      setupFilterTrigger(
+        filter,
+        trigger
+      );
+  
+  
+      options.forEach((option) => {
+  
+        option.addEventListener(
+          "click",
+          (event) => {
+  
+            event.preventDefault();
+  
+            event.stopPropagation();
+  
+  
+            const selected =
+              option.textContent.trim();
+  
+  
+  
+            /* ================================================================
+               LABEL
+            ================================================================ */
+  
+            if (label) {
+  
+              label.textContent =
+                selected;
+  
+            }
+  
+  
+  
+            /* ================================================================
+               ACTIVE
+            ================================================================ */
+  
+            options.forEach(
+              (other) => {
+  
+                other.classList.remove(
+                  "is--active"
+                );
+  
+              }
+            );
+  
+  
+            option.classList.add(
+              "is--active"
+            );
+  
+  
+  
+            /* ================================================================
+               FILTER SWIPER
+            ================================================================ */
+  
+            filterMediaSlides(
+              selected
+            );
+  
+  
+  
+            closeFilter(filter);
+  
+          }
+        );
+  
+      });
+  
+    }
+  
+  
+  
+    /* ==========================================================================
+       FILTER OUTSIDE CLICK
+    ========================================================================== */
+  
+    function initFilterOutsideClick() {
+  
+      document.addEventListener(
+        "click",
+        (event) => {
+  
+          document
+            .querySelectorAll(
+              ".filter--top .faq--filter"
+            )
+            .forEach((filter) => {
+  
+              if (
+                !filter.contains(
+                  event.target
+                )
+              ) {
+  
+                closeFilter(filter);
+  
+              }
+  
+            });
+  
+        }
+      );
+  
+  
+      document.addEventListener(
+        "keydown",
+        (event) => {
+  
+          if (
+            event.key ===
+            "Escape"
+          ) {
+  
+            closeAllFilters();
+  
+          }
+  
+        }
+      );
+  
+    }
+  
+  
+  
+    /* ==========================================================================
+       INIT FILTERS
+    ========================================================================== */
+  
+    function initFilters() {
+  
+      initActualitesFilter();
+  
+      initMediaFilter();
+  
+      initFilterOutsideClick();
+  
+    }
+  
+  
+  
+    /* ==========================================================================
+       7. FAQ
+    ========================================================================== */
+  
+    function initFAQ() {
+  
+      const items =
+        document.querySelectorAll(
+          ".faq--item"
+        );
+  
+  
+      if (!items.length) return;
+  
+  
+      if (
+        typeof gsap ===
+        "undefined"
+      ) {
+  
+        console.warn(
+          "GE Home: GSAP missing."
+        );
+  
+        return;
+  
+      }
+  
+  
+      items.forEach((item) => {
+  
+        const question =
+          item.querySelector(
+            ".faq--question"
+          );
+  
+  
+        const answer =
+          item.querySelector(
+            ".faq--answer"
+          );
+  
+  
+        const arrow =
+          item.querySelector(
+            ".faq--arrow"
+          );
+  
+  
+        if (
+          !question ||
+          !answer
+        ) {
+  
+          return;
+  
+        }
+  
+  
+  
+        /* ================================================================
+           ACCESSIBILITY
+        ================================================================ */
+  
+        question.setAttribute(
+          "role",
+          "button"
+        );
+  
+  
+        question.setAttribute(
+          "tabindex",
+          "0"
+        );
+  
+  
+        question.setAttribute(
+          "aria-expanded",
+          "false"
+        );
+  
+  
+  
+        /* ================================================================
+           INITIAL
+        ================================================================ */
+  
+        gsap.set(
+          answer,
+          {
+  
+            height: 0,
+  
+            opacity: 0,
+  
+            overflow: "hidden",
+  
+            pointerEvents: "none"
+  
+          }
+        );
+  
+  
+        if (arrow) {
+  
+          gsap.set(
+            arrow,
+            {
+              rotate: 0
+            }
+          );
+  
+        }
+  
+  
+  
+        /* ================================================================
+           TOGGLE
+        ================================================================ */
+  
+        const toggle = () => {
+  
+          const isOpen =
+            item.classList.contains(
+              "is--open"
+            );
+  
+  
+          if (isOpen) {
+  
+            closeFAQ(item);
+  
+            return;
+  
+          }
+  
+  
+          items.forEach(
+            (other) => {
+  
+              if (
+                other !== item
+              ) {
+  
+                closeFAQ(other);
+  
+              }
+  
+            }
+          );
+  
+  
+          openFAQ(item);
+  
+        };
+  
+  
+        question.addEventListener(
+          "click",
+          toggle
+        );
+  
+  
+        question.addEventListener(
+          "keydown",
+          (event) => {
+  
+            if (
+              event.key ===
+                "Enter" ||
+              event.key ===
+                " "
+            ) {
+  
+              event.preventDefault();
+  
+              toggle();
+  
+            }
+  
+  
+            if (
+              event.key ===
+              "Escape"
+            ) {
+  
+              closeFAQ(item);
+  
+            }
+  
+          }
+        );
+  
+      });
+  
+    }
+  
+  
+  
+    /* ==========================================================================
+       OPEN FAQ
+    ========================================================================== */
+  
+    function openFAQ(item) {
+  
+      if (
         item.classList.contains(
           "is--open"
+        )
+      ) {
+  
+        return;
+  
+      }
+  
+  
+      const question =
+        item.querySelector(
+          ".faq--question"
         );
-
-
-      /*
-      Ferme les autres
-      */
-
-      items.forEach(
-        (otherItem) => {
-
-          if (
-            otherItem === item
-          ) return;
-
-
-          closeFAQ(otherItem);
-
+  
+  
+      const answer =
+        item.querySelector(
+          ".faq--answer"
+        );
+  
+  
+      const arrow =
+        item.querySelector(
+          ".faq--arrow"
+        );
+  
+  
+      if (!answer) return;
+  
+  
+      item.classList.add(
+        "is--open"
+      );
+  
+  
+      question?.setAttribute(
+        "aria-expanded",
+        "true"
+      );
+  
+  
+      gsap.killTweensOf(
+        answer
+      );
+  
+  
+      if (arrow) {
+  
+        gsap.killTweensOf(
+          arrow
+        );
+  
+      }
+  
+  
+      gsap.to(
+        answer,
+        {
+  
+          height: "auto",
+  
+          opacity: 1,
+  
+          pointerEvents: "auto",
+  
+          duration: 0.5,
+  
+          ease: "power3.out",
+  
+          overwrite: true
+  
         }
       );
-
-
-      if (isOpen) {
-
-        closeFAQ(item);
-
-      } else {
-
-        openFAQ(item);
-
+  
+  
+      if (arrow) {
+  
+        gsap.to(
+          arrow,
+          {
+  
+            rotate: 180,
+  
+            duration: 0.4,
+  
+            ease: "power3.out",
+  
+            overwrite: true
+  
+          }
+        );
+  
       }
-
+  
     }
-
-
-    question.addEventListener(
-      "click",
-      toggleFAQ
-    );
-
-
-    question.addEventListener(
-      "keydown",
-      (event) => {
-
-        if (
-          event.key === "Enter" ||
-          event.key === " "
-        ) {
-
-          event.preventDefault();
-
-          toggleFAQ();
-
+  
+  
+  
+    /* ==========================================================================
+       CLOSE FAQ
+    ========================================================================== */
+  
+    function closeFAQ(item) {
+  
+      if (
+        !item.classList.contains(
+          "is--open"
+        )
+      ) {
+  
+        return;
+  
+      }
+  
+  
+      const question =
+        item.querySelector(
+          ".faq--question"
+        );
+  
+  
+      const answer =
+        item.querySelector(
+          ".faq--answer"
+        );
+  
+  
+      const arrow =
+        item.querySelector(
+          ".faq--arrow"
+        );
+  
+  
+      if (!answer) return;
+  
+  
+      question?.setAttribute(
+        "aria-expanded",
+        "false"
+      );
+  
+  
+      gsap.killTweensOf(
+        answer
+      );
+  
+  
+      if (arrow) {
+  
+        gsap.killTweensOf(
+          arrow
+        );
+  
+      }
+  
+  
+      gsap.to(
+        answer,
+        {
+  
+          height: 0,
+  
+          opacity: 0,
+  
+          pointerEvents: "none",
+  
+          duration: 0.4,
+  
+          ease: "power2.inOut",
+  
+          overwrite: true,
+  
+          onComplete: () => {
+  
+            item.classList.remove(
+              "is--open"
+            );
+  
+          }
+  
         }
-
+      );
+  
+  
+      if (arrow) {
+  
+        gsap.to(
+          arrow,
+          {
+  
+            rotate: 0,
+  
+            duration: 0.35,
+  
+            ease: "power2.inOut",
+  
+            overwrite: true
+  
+          }
+        );
+  
       }
-    );
-
-  });
-
-}
-
-
-/* =========================================================
-   OPEN FAQ
-========================================================= */
-
-function openFAQ(item) {
-
-  const question =
-    item.querySelector(
-      ".faq--question"
-    );
-
-
-  const answer =
-    item.querySelector(
-      ".faq--answer"
-    );
-
-
-  if (!answer) return;
-
-
-  item.classList.add(
-    "is--open"
-  );
-
-
-  question?.setAttribute(
-    "aria-expanded",
-    "true"
-  );
-
-
-  gsap.killTweensOf(answer);
-
-
-  gsap.to(
-    answer,
-    {
-
-      height: "auto",
-
-      opacity: 1,
-
-      duration: 0.5,
-
-      ease: "power3.out",
-
-      pointerEvents: "auto"
-
+  
     }
-  );
-
-}
-
-
-/* =========================================================
-   CLOSE FAQ
-========================================================= */
-
-function closeFAQ(item) {
-
-  const question =
-    item.querySelector(
-      ".faq--question"
-    );
-
-
-  const answer =
-    item.querySelector(
-      ".faq--answer"
-    );
-
-
-  if (!answer) return;
-
-
-  item.classList.remove(
-    "is--open"
-  );
-
-
-  question?.setAttribute(
-    "aria-expanded",
-    "false"
-  );
-
-
-  gsap.killTweensOf(answer);
-
-
-  gsap.to(
-    answer,
-    {
-
-      height: 0,
-
-      opacity: 0,
-
-      duration: 0.4,
-
-      ease: "power3.inOut",
-
-      pointerEvents: "none"
-
-    }
-  );
-
-}
-
-
-/* =========================================================
-   INIT
-========================================================= */
-
-document.addEventListener(
-  "DOMContentLoaded",
-  () => {
-
-    initSchoolCards();
-
-    initMetierCards();
-
-    /*
-    Important :
-    slider AVANT le filtre média
-    pour sauvegarder les slides originales.
-    */
-
-    initMediaSlider();
-
-    initFilters();
-
-    initFAQ();
-
-  }
-);
+  
+  
+  })();
