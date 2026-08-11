@@ -97,7 +97,7 @@
     /* ==========================================================================
        2. METIER CARDS
   
-       Color source:
+       Source color:
        background-color of .metier--card
     ========================================================================== */
   
@@ -183,14 +183,29 @@
           {
   
             /* ================================================================
-               BASIC
+               WIDTH
             ================================================================ */
   
-            slidesPerView: 1.15,
+            /*
+              Respect Webflow/CSS slide width.
+            */
+  
+            slidesPerView: "auto",
   
             slidesPerGroup: 1,
   
-            spaceBetween: 16,
+  
+            /*
+              Gap is controlled in CSS:
+              gap: 2rem
+            */
+  
+            spaceBetween: 0,
+  
+  
+            /* ================================================================
+               SPEED
+            ================================================================ */
   
             speed: 800,
   
@@ -211,12 +226,17 @@
   
   
             /* ================================================================
-               STABLE REPEAT
+               REPEAT
             ================================================================ */
   
             loop: false,
   
             rewind: true,
+  
+  
+            /* ================================================================
+               POSITION
+            ================================================================ */
   
             centeredSlides: false,
   
@@ -257,49 +277,7 @@
   
             observeParents: false,
   
-  
-            /* ================================================================
-               BREAKPOINTS
-            ================================================================ */
-  
-            breakpoints: {
-  
-              480: {
-  
-                slidesPerView: 1.4,
-  
-                spaceBetween: 16
-  
-              },
-  
-  
-              768: {
-  
-                slidesPerView: 2.1,
-  
-                spaceBetween: 20
-  
-              },
-  
-  
-              992: {
-  
-                slidesPerView: 3,
-  
-                spaceBetween: 24
-  
-              },
-  
-  
-              1440: {
-  
-                slidesPerView: 3,
-  
-                spaceBetween: 24
-  
-              }
-  
-            }
+            resizeObserver: true
   
           }
         );
@@ -485,6 +463,10 @@
         }
   
   
+        /*
+          Only one open FAQ.
+        */
+  
         items.forEach((otherItem) => {
   
           if (
@@ -538,7 +520,10 @@
         }
   
   
-        /* Shadow activates here */
+  
+        /*
+          Activate open state + shadow.
+        */
   
         item.classList.add(
           "is--open"
@@ -553,7 +538,7 @@
   
   
         /* ----------------------------------------------------------------------
-           Measure
+           Measure target height
         ---------------------------------------------------------------------- */
   
         gsap.set(
@@ -576,7 +561,7 @@
   
   
         /* ----------------------------------------------------------------------
-           Animate answer
+           Animate
         ---------------------------------------------------------------------- */
   
         gsap.fromTo(
@@ -698,7 +683,7 @@
   
   
         /* ----------------------------------------------------------------------
-           Close
+           Animate close
         ---------------------------------------------------------------------- */
   
         gsap.to(
@@ -718,8 +703,7 @@
             onComplete: () => {
   
               /*
-                Shadow disappears only
-                when closing is finished.
+                Remove shadow only when fully closed.
               */
   
               item.classList.remove(
@@ -731,9 +715,9 @@
                 answer,
                 {
   
-                  pointerEvents: "none",
+                  height: 0,
   
-                  height: 0
+                  pointerEvents: "none"
   
                 }
               );
