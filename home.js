@@ -98,13 +98,7 @@
        2. METIER CARDS
   
        Color source:
-  
        background-color of .metier--card
-  
-       Used for:
-       - shadow
-       - title on hover
-       - button on hover
     ========================================================================== */
   
     function initMetierCards() {
@@ -181,10 +175,6 @@
   
       sliders.forEach((slider) => {
   
-        /*
-          Prevent duplicate initialization.
-        */
-  
         if (slider.swiper) return;
   
   
@@ -202,18 +192,7 @@
   
             spaceBetween: 16,
   
-            speed: 750,
-  
-  
-  
-            /* ================================================================
-               LOOP
-            ================================================================ */
-  
-            loop: true,
-  
-            loopAdditionalSlides: 2,
-  
+            speed: 800,
   
   
             /* ================================================================
@@ -222,7 +201,7 @@
   
             autoplay: {
   
-              delay: 2800,
+              delay: 2500,
   
               disableOnInteraction: false,
   
@@ -231,13 +210,15 @@
             },
   
   
-  
             /* ================================================================
-               POSITION
+               STABLE REPEAT
             ================================================================ */
   
-            centeredSlides: false,
+            loop: false,
   
+            rewind: true,
+  
+            centeredSlides: false,
   
   
             /* ================================================================
@@ -246,16 +227,15 @@
   
             grabCursor: true,
   
-            simulateTouch: true,
-  
             allowTouchMove: true,
+  
+            simulateTouch: true,
   
             touchRatio: 1,
   
             touchAngle: 45,
   
             threshold: 5,
-  
   
   
             /* ================================================================
@@ -267,21 +247,15 @@
             resistanceRatio: 0.65,
   
   
-  
             /* ================================================================
-               OBSERVERS
+               STABILITY
             ================================================================ */
   
-            watchOverflow: true,
+            watchOverflow: false,
   
-            observer: true,
+            observer: false,
   
-            observeParents: true,
-  
-            observeSlideChildren: true,
-  
-            resizeObserver: true,
-  
+            observeParents: false,
   
   
             /* ================================================================
@@ -289,9 +263,6 @@
             ================================================================ */
   
             breakpoints: {
-  
-  
-              /* Mobile */
   
               480: {
   
@@ -302,8 +273,6 @@
               },
   
   
-              /* Tablet */
-  
               768: {
   
                 slidesPerView: 2.1,
@@ -313,8 +282,6 @@
               },
   
   
-              /* Desktop */
-  
               992: {
   
                 slidesPerView: 3,
@@ -323,8 +290,6 @@
   
               },
   
-  
-              /* Large desktop */
   
               1440: {
   
@@ -520,10 +485,6 @@
         }
   
   
-        /*
-          Only one FAQ open.
-        */
-  
         items.forEach((otherItem) => {
   
           if (
@@ -577,11 +538,7 @@
         }
   
   
-        /*
-          Add this BEFORE animation.
-  
-          This is what activates the shadow.
-        */
+        /* Shadow activates here */
   
         item.classList.add(
           "is--open"
@@ -596,7 +553,7 @@
   
   
         /* ----------------------------------------------------------------------
-           Measure content height
+           Measure
         ---------------------------------------------------------------------- */
   
         gsap.set(
@@ -619,7 +576,7 @@
   
   
         /* ----------------------------------------------------------------------
-           Animate
+           Animate answer
         ---------------------------------------------------------------------- */
   
         gsap.fromTo(
@@ -741,7 +698,7 @@
   
   
         /* ----------------------------------------------------------------------
-           Close answer
+           Close
         ---------------------------------------------------------------------- */
   
         gsap.to(
@@ -761,11 +718,8 @@
             onComplete: () => {
   
               /*
-                Remove is--open AFTER closing.
-  
-                The shadow therefore stays visible
-                during the close animation and disappears
-                once the FAQ is fully closed.
+                Shadow disappears only
+                when closing is finished.
               */
   
               item.classList.remove(
@@ -776,7 +730,11 @@
               gsap.set(
                 answer,
                 {
-                  pointerEvents: "none"
+  
+                  pointerEvents: "none",
+  
+                  height: 0
+  
                 }
               );
   
