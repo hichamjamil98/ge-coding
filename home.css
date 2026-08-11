@@ -43,9 +43,9 @@
   }
   
   
-  /* --------------------------------------------------------------------------
+  /* ==========================================================================
      ECOLES — HOVER
-  -------------------------------------------------------------------------- */
+  ========================================================================== */
   
   @media (hover: hover) and (pointer: fine) {
   
@@ -61,6 +61,7 @@
       transition-delay: 0s;
     }
   
+  
     .is--home-subhero
     .groupe--ecole-item:hover
     .ecole--hover-link {
@@ -69,11 +70,13 @@
       transform: translateY(0);
     }
   
+  
     .is--home-subhero
     .groupe--ecole-item:hover
     .ecole--hover-link:nth-child(1) {
       transition-delay: 0.03s;
     }
+  
   
     .is--home-subhero
     .groupe--ecole-item:hover
@@ -81,11 +84,13 @@
       transition-delay: 0.06s;
     }
   
+  
     .is--home-subhero
     .groupe--ecole-item:hover
     .ecole--hover-link:nth-child(3) {
       transition-delay: 0.09s;
     }
+  
   
     .is--home-subhero
     .groupe--ecole-item:hover
@@ -96,9 +101,9 @@
   }
   
   
-  /* --------------------------------------------------------------------------
+  /* ==========================================================================
      ECOLES — KEYBOARD
-  -------------------------------------------------------------------------- */
+  ========================================================================== */
   
   .is--home-subhero
   .groupe--ecole-item:focus-within
@@ -111,6 +116,7 @@
   
     transition-delay: 0s;
   }
+  
   
   .is--home-subhero
   .groupe--ecole-item:focus-within
@@ -128,6 +134,7 @@
   .metier--card-parent {
     overflow: visible;
   }
+  
   
   .metier--card {
     --metier-color: transparent;
@@ -179,9 +186,9 @@
   }
   
   
-  /* --------------------------------------------------------------------------
+  /* ==========================================================================
      METIERS — HOVER
-  -------------------------------------------------------------------------- */
+  ========================================================================== */
   
   @media (hover: hover) and (pointer: fine) {
   
@@ -191,6 +198,9 @@
         var(--metier-color) !important;
     }
   
+  
+    /* Title → droite */
+  
     .metier--card:hover
     .metier--card-text
     .heading-style-40 {
@@ -198,6 +208,9 @@
   
       color: var(--metier-color) !important;
     }
+  
+  
+    /* Button → gauche */
   
     .metier--card:hover
     .metier--card-text
@@ -212,60 +225,64 @@
   
   
   /* ==========================================================================
-     3. FILTERS — Z INDEX
+     3. FILTERS — ACTUALITES + MEDIA
   ========================================================================== */
   
   /*
-    IMPORTANT:
+    IMPORTANT :
   
-    Aucun déplacement des dropdowns ici.
-    La position reste celle définie dans Webflow.
+    On ne modifie PAS le placement Webflow des dropdowns.
   
-    On agit uniquement sur :
-    - stacking
-    - overflow
+    Aucun :
+    top
+    left
+    right
+    bottom
+  
+    n'est défini ici.
   */
   
   
   .filter--top {
     position: relative;
   
-    z-index: 500 !important;
+    z-index: 100;
   
     overflow: visible !important;
-  }
-  
-  
-  /*
-    On remonte aussi le container qui contient le filter--top
-    sans modifier son emplacement.
-  */
-  
-  .filter--top
-  .faq--filter {
-    position: relative;
-  
-    z-index: 510 !important;
-  
-    overflow: visible !important;
-  }
-  
-  
-  .filter--top
-  .faq--filter.is--open {
-    z-index: 9999 !important;
   }
   
   
   /* --------------------------------------------------------------------------
-     TRIGGER
+     FILTER WRAPPER
   -------------------------------------------------------------------------- */
+  
+  .filter--top .faq--filter {
+    position: relative;
+  
+    z-index: 101;
+  
+    overflow: visible !important;
+  }
+  
+  
+  .filter--top .faq--filter.is--open {
+    z-index: 10000;
+  }
+  
+  
+  /* ==========================================================================
+     FILTER TRIGGER
+  
+     IMPORTANT :
+     le trigger est AU-DESSUS du dropdown.
+     Ainsi "Filter par thème" reste toujours visible.
+  ========================================================================== */
   
   .filter--top
   .actualite--filter-trigger {
     position: relative;
   
-    z-index: 2;
+    z-index: 10002;
   
     cursor: pointer;
   
@@ -274,19 +291,28 @@
   
   
   /* --------------------------------------------------------------------------
-     DROPDOWN
-  
-     Ne pas ajouter :
-     position:absolute
-     top
-     right
-     left
-     bottom
+     FILTER TEXT
   -------------------------------------------------------------------------- */
+  
+  .filter--text {
+    position: relative;
+  
+    z-index: 2;
+  
+    display: block;
+  
+    opacity: 1 !important;
+    visibility: visible !important;
+  }
+  
+  
+  /* ==========================================================================
+     DROPDOWN
+  ========================================================================== */
   
   .filter--top
   .actualites--filter-drop {
-    z-index: 10000 !important;
+    z-index: 10001;
   
     opacity: 0;
     visibility: hidden;
@@ -305,6 +331,10 @@
   }
   
   
+  /* --------------------------------------------------------------------------
+     OPEN
+  -------------------------------------------------------------------------- */
+  
   .filter--top
   .faq--filter.is--open
   .actualites--filter-drop {
@@ -318,17 +348,22 @@
   }
   
   
-  /* --------------------------------------------------------------------------
-     ARROW
-  -------------------------------------------------------------------------- */
+  /* ==========================================================================
+     FILTER ARROW
+  ========================================================================== */
   
   .faq--filter-arrow {
+    position: relative;
+  
+    z-index: 2;
+  
     transform-origin: center;
   
     transition:
       transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
   
-    will-change: transform;
+    will-change:
+      transform;
   }
   
   
@@ -338,9 +373,9 @@
   }
   
   
-  /* --------------------------------------------------------------------------
+  /* ==========================================================================
      FILTER OPTIONS
-  -------------------------------------------------------------------------- */
+  ========================================================================== */
   
   .actualites--filter-drop
   [filter="text"] {
@@ -392,7 +427,7 @@
   
   
   /* ==========================================================================
-     5. MEDIA SECTION
+     5. MEDIA
   ========================================================================== */
   
   .section.is--home-slider {
@@ -402,17 +437,15 @@
   }
   
   
-  /*
-    Filter Media devant le Swiper.
-  */
+  /* --------------------------------------------------------------------------
+     MEDIA FILTER
+  -------------------------------------------------------------------------- */
   
   .section.is--home-slider
   .filter--top {
     position: relative;
   
-    z-index: 500 !important;
-  
-    overflow: visible !important;
+    z-index: 100;
   }
   
   
@@ -420,27 +453,16 @@
   .media--filter {
     position: relative;
   
-    z-index: 600 !important;
+    z-index: 101;
   
     overflow: visible !important;
   }
   
   
   .section.is--home-slider
-  .faq--filter {
-    z-index: 700 !important;
-  }
-  
-  
-  .section.is--home-slider
+  .media--filter
   .faq--filter.is--open {
-    z-index: 9999 !important;
-  }
-  
-  
-  .section.is--home-slider
-  .actualites--filter-drop {
-    z-index: 10000 !important;
+    z-index: 10000;
   }
   
   
@@ -480,22 +502,18 @@
   
   /* --------------------------------------------------------------------------
      SLIDES
-  
-     La width reste contrôlée par Webflow.
   -------------------------------------------------------------------------- */
   
   .swiper.is--media
   .swiper-slide {
     flex-shrink: 0;
   
-    width: auto;
-  
     height: auto;
   }
   
   
   /* --------------------------------------------------------------------------
-     CARD
+     MEDIA CARD
   -------------------------------------------------------------------------- */
   
   .swiper.is--media
@@ -516,13 +534,15 @@
   
   
   /*
-    IMPORTANT:
+    IMPORTANT :
   
-    Aucune règle CSS sur .heading-style-20.
+    aucune règle CSS sur .heading-style-20.
+  
     Webflow garde :
     - font-size
     - line-height
     - font-weight
+    - font-family
     - letter-spacing
     - color
   */
@@ -596,19 +616,20 @@
   .faq--arrow {
     transform-origin: center;
   
-    will-change: transform;
+    will-change:
+      transform;
   }
   
   
   /* --------------------------------------------------------------------------
-     OPEN STATE
+     OPEN
   
-     Shadow :
-     X       0
-     Y       0
-     Blur    100
-     Spread  0
-     Color   #CFF4FF
+     Shadow exact :
+     X      0
+     Y      0
+     Blur   100px
+     Spread 0
+     Color  #CFF4FF
   -------------------------------------------------------------------------- */
   
   .faq--item.is--open {
@@ -638,7 +659,8 @@
     .actualites--filter-drop,
     .faq--filter-arrow,
     .faq--item {
-      transition-duration: 0.01ms !important;
+      transition-duration:
+        0.01ms !important;
     }
   
   }

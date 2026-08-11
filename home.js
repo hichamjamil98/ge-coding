@@ -1,5 +1,5 @@
 /* ==========================================================================
-   GE — HOME
+   GE — HOME PAGE
 
    Requires:
    - GSAP
@@ -163,6 +163,10 @@
         }
   
   
+        /*
+          Couleur CMS de référence.
+        */
+  
         card.style.setProperty(
           "--metier-color",
           color
@@ -178,12 +182,80 @@
        3. FILTER HELPERS
     ========================================================================== */
   
+    function prepareFilterLabel(
+      filter
+    ) {
+  
+      const label =
+        filter?.querySelector(
+          ".filter--text"
+        );
+  
+  
+      if (!label) return null;
+  
+  
+      /*
+        Sauvegarde du texte initial.
+  
+        Actualités :
+        Filter par thème
+  
+        Médias :
+        Filter par thèmes
+      */
+  
+      if (
+        !label.dataset.initialText
+      ) {
+  
+        label.dataset.initialText =
+          label.textContent.trim();
+  
+      }
+  
+  
+      /*
+        Force l'état initial correct.
+      */
+  
+      label.textContent =
+        label.dataset.initialText;
+  
+  
+      return label;
+  
+    }
+  
+  
+  
+    /* ==========================================================================
+       SETUP FILTER TRIGGER
+    ========================================================================== */
+  
     function setupFilterTrigger(
       filter,
       trigger
     ) {
   
-      if (!filter || !trigger) return;
+      if (
+        !filter ||
+        !trigger
+      ) {
+  
+        return;
+  
+      }
+  
+  
+      /*
+        Enlève un éventuel is--open
+        présent dans le HTML/Designer.
+      */
+  
+      filter.classList.remove(
+        "is--open"
+      );
   
   
       trigger.setAttribute(
@@ -202,6 +274,7 @@
         "aria-expanded",
         "false"
       );
+  
   
   
       /* ------------------------------------------------------------------------
@@ -223,6 +296,10 @@
             );
   
   
+          /*
+            Ferme l'autre filtre.
+          */
+  
           closeAllFilters(
             filter
           );
@@ -230,18 +307,23 @@
   
           if (isOpen) {
   
-            closeFilter(filter);
+            closeFilter(
+              filter
+            );
   
           }
   
           else {
   
-            openFilter(filter);
+            openFilter(
+              filter
+            );
   
           }
   
         }
       );
+  
   
   
       /* ------------------------------------------------------------------------
@@ -268,7 +350,9 @@
             event.key === "Escape"
           ) {
   
-            closeFilter(filter);
+            closeFilter(
+              filter
+            );
   
           }
   
@@ -283,7 +367,9 @@
        OPEN FILTER
     ========================================================================== */
   
-    function openFilter(filter) {
+    function openFilter(
+      filter
+    ) {
   
       if (!filter) return;
   
@@ -312,7 +398,9 @@
        CLOSE FILTER
     ========================================================================== */
   
-    function closeFilter(filter) {
+    function closeFilter(
+      filter
+    ) {
   
       if (!filter) return;
   
@@ -355,7 +443,9 @@
             filter !== exception
           ) {
   
-            closeFilter(filter);
+            closeFilter(
+              filter
+            );
   
           }
   
@@ -381,7 +471,9 @@
   
   
       const section =
-        grid.closest(".section");
+        grid.closest(
+          ".section"
+        );
   
   
       if (!section) return;
@@ -393,20 +485,23 @@
         );
   
   
+      if (!filter) return;
+  
+  
       const trigger =
-        filter?.querySelector(
+        filter.querySelector(
           ".actualite--filter-trigger"
         );
   
   
       const label =
-        filter?.querySelector(
-          ".filter--text"
+        prepareFilterLabel(
+          filter
         );
   
   
       const dropdown =
-        filter?.querySelector(
+        filter.querySelector(
           ".actualites--filter-drop"
         );
   
@@ -424,7 +519,6 @@
   
   
       if (
-        !filter ||
         !trigger ||
         !dropdown ||
         !options?.length
@@ -440,6 +534,11 @@
         trigger
       );
   
+  
+  
+      /* ------------------------------------------------------------------------
+         OPTIONS
+      ------------------------------------------------------------------------ */
   
       options.forEach((option) => {
   
@@ -457,13 +556,15 @@
   
   
             const selectedNormalized =
-              normalizeText(selected);
+              normalizeText(
+                selected
+              );
   
   
   
-            /* --------------------------------------------------------------
-               CHANGE LABEL
-            -------------------------------------------------------------- */
+            /* ================================================================
+               UPDATE TRIGGER TEXT
+            ================================================================ */
   
             if (label) {
   
@@ -474,17 +575,19 @@
   
   
   
-            /* --------------------------------------------------------------
+            /* ================================================================
                ACTIVE OPTION
-            -------------------------------------------------------------- */
+            ================================================================ */
   
-            options.forEach((other) => {
+            options.forEach(
+              (other) => {
   
-              other.classList.remove(
-                "is--active"
-              );
+                other.classList.remove(
+                  "is--active"
+                );
   
-            });
+              }
+            );
   
   
             option.classList.add(
@@ -493,11 +596,12 @@
   
   
   
-            /* --------------------------------------------------------------
-               FILTER ACTUALITES
+            /* ================================================================
+               FILTER ITEMS
   
+               Actualités :
                filter="results"
-            -------------------------------------------------------------- */
+            ================================================================ */
   
             items.forEach((item) => {
   
@@ -527,7 +631,9 @@
   
   
   
-            closeFilter(filter);
+            closeFilter(
+              filter
+            );
   
           }
         );
@@ -539,7 +645,7 @@
   
   
     /* ==========================================================================
-       5. SAVE ORIGINAL MEDIA SLIDES
+       5. MEDIA — SAVE ORIGINAL SLIDES
     ========================================================================== */
   
     function saveOriginalMediaSlides() {
@@ -564,7 +670,9 @@
   
       originalMediaSlides =
         Array
-          .from(wrapper.children)
+          .from(
+            wrapper.children
+          )
           .filter((slide) => {
   
             return slide.classList.contains(
@@ -575,7 +683,9 @@
           .map((slide) => {
   
             const clone =
-              slide.cloneNode(true);
+              slide.cloneNode(
+                true
+              );
   
   
             cleanSwiperSlide(
@@ -595,7 +705,9 @@
        CLEAN SWIPER SLIDE
     ========================================================================== */
   
-    function cleanSwiperSlide(slide) {
+    function cleanSwiperSlide(
+      slide
+    ) {
   
       slide.classList.remove(
         "swiper-slide-active",
@@ -635,12 +747,17 @@
         "transition-duration"
       );
   
+  
+      slide.style.removeProperty(
+        "transition-delay"
+      );
+  
     }
   
   
   
     /* ==========================================================================
-       2REM → PIXELS
+       MEDIA GAP — 2REM
     ========================================================================== */
   
     function getMediaGap() {
@@ -655,7 +772,9 @@
         );
   
   
-      return rootFontSize * 2;
+      return (
+        rootFontSize * 2
+      );
   
     }
   
@@ -703,6 +822,11 @@
       }
   
   
+  
+      /* ------------------------------------------------------------------------
+         SWIPER
+      ------------------------------------------------------------------------ */
+  
       mediaSwiper =
         new Swiper(
           slider,
@@ -713,7 +837,7 @@
             ================================================================ */
   
             slidesPerView:
-              "auto",
+              3,
   
   
             slidesPerGroup:
@@ -737,11 +861,11 @@
   
   
             /* ================================================================
-               TRUE LOOP
+               TRUE INFINITE LOOP
             ================================================================ */
   
             loop:
-              slides.length > 1,
+              slides.length > 3,
   
   
             loopAdditionalSlides:
@@ -753,7 +877,7 @@
             ================================================================ */
   
             autoplay:
-              slides.length > 1
+              slides.length > 3
                 ? {
   
                     delay:
@@ -830,7 +954,47 @@
   
   
             resizeObserver:
-              true
+              true,
+  
+  
+            /* ================================================================
+               BREAKPOINTS
+            ================================================================ */
+  
+            breakpoints: {
+  
+              0: {
+  
+                slidesPerView:
+                  1.15
+  
+              },
+  
+  
+              480: {
+  
+                slidesPerView:
+                  1.4
+  
+              },
+  
+  
+              768: {
+  
+                slidesPerView:
+                  2
+  
+              },
+  
+  
+              992: {
+  
+                slidesPerView:
+                  3
+  
+              }
+  
+            }
   
           }
         );
@@ -913,7 +1077,7 @@
   
   
       /* ------------------------------------------------------------------------
-         DESTROY CURRENT SWIPER
+         DESTROY BEFORE DOM CHANGE
       ------------------------------------------------------------------------ */
   
       destroyMediaSwiper();
@@ -932,7 +1096,7 @@
       /* ------------------------------------------------------------------------
          FILTER
   
-         Media utilise :
+         Médias :
          filter="result"
       ------------------------------------------------------------------------ */
   
@@ -1032,26 +1196,28 @@
         );
   
   
+      if (!filter) return;
+  
+  
       const trigger =
-        filter?.querySelector(
+        filter.querySelector(
           ".actualite--filter-trigger"
         );
   
   
       const label =
-        filter?.querySelector(
-          ".filter--text"
+        prepareFilterLabel(
+          filter
         );
   
   
       /*
-        Dans ton HTML actuel,
-        Média utilise aussi :
-        .actualites--filter-drop
+        Ton Webflow utilise aussi
+        .actualites--filter-drop ici.
       */
   
       const dropdown =
-        filter?.querySelector(
+        filter.querySelector(
           ".actualites--filter-drop"
         );
   
@@ -1063,7 +1229,6 @@
   
   
       if (
-        !filter ||
         !trigger ||
         !dropdown ||
         !options?.length
@@ -1079,6 +1244,11 @@
         trigger
       );
   
+  
+  
+      /* ------------------------------------------------------------------------
+         OPTIONS
+      ------------------------------------------------------------------------ */
   
       options.forEach((option) => {
   
@@ -1096,9 +1266,9 @@
   
   
   
-            /* --------------------------------------------------------------
-               CHANGE LABEL
-            -------------------------------------------------------------- */
+            /* ================================================================
+               UPDATE LABEL
+            ================================================================ */
   
             if (label) {
   
@@ -1109,9 +1279,9 @@
   
   
   
-            /* --------------------------------------------------------------
+            /* ================================================================
                ACTIVE
-            -------------------------------------------------------------- */
+            ================================================================ */
   
             options.forEach(
               (other) => {
@@ -1130,9 +1300,9 @@
   
   
   
-            /* --------------------------------------------------------------
+            /* ================================================================
                FILTER MEDIA
-            -------------------------------------------------------------- */
+            ================================================================ */
   
             filterMediaSlides(
               selected
@@ -1287,10 +1457,6 @@
   
   
   
-        /* ----------------------------------------------------------------------
-           ACCESSIBILITY
-        ---------------------------------------------------------------------- */
-  
         question.setAttribute(
           "role",
           "button"
@@ -1309,10 +1475,6 @@
         );
   
   
-  
-        /* ----------------------------------------------------------------------
-           INITIAL
-        ---------------------------------------------------------------------- */
   
         gsap.set(
           answer,
@@ -1349,10 +1511,6 @@
         }
   
   
-  
-        /* ----------------------------------------------------------------------
-           TOGGLE
-        ---------------------------------------------------------------------- */
   
         const toggle =
           () => {
