@@ -129,16 +129,6 @@
   }
   
   
-  /*
-    IMPORTANT
-  
-    - aucune animation image
-    - aucun zoom
-    - .mask--82 untouched
-    - aucun changement de layout Webflow
-  */
-  
-  
   /* --------------------------------------------------------------------------
      TITLE
   -------------------------------------------------------------------------- */
@@ -187,25 +177,12 @@
   
   @media (hover: hover) and (pointer: fine) {
   
-    /*
-      Shadow :
-      X = 0
-      Y = 0
-      Blur = 100px
-      Spread = 40px
-  
-      Seule la couleur vient du background
-      de .metier--card.
-    */
-  
     .metier--card:hover {
       box-shadow:
         0 0 100px 40px
         var(--metier-color) !important;
     }
   
-  
-    /* Title → droite */
   
     .metier--card:hover
     .metier--card-text
@@ -215,8 +192,6 @@
       color: var(--metier-color) !important;
     }
   
-  
-    /* Button → gauche */
   
     .metier--card:hover
     .metier--card-text
@@ -234,14 +209,8 @@
      3. MEDIA SLIDER
   ========================================================================== */
   
-  /*
-    IMPORTANT:
-    overflow visible so card shadows are not clipped.
-  */
-  
   .swiper.is--media {
     width: 100%;
-  
     overflow: visible;
   
     cursor: grab;
@@ -253,10 +222,6 @@
   }
   
   
-  /* --------------------------------------------------------------------------
-     WRAPPER
-  -------------------------------------------------------------------------- */
-  
   .swiper.is--media .swiper-wrapper {
     display: flex;
   
@@ -266,58 +231,115 @@
   }
   
   
-  /* --------------------------------------------------------------------------
-     SLIDES
-  -------------------------------------------------------------------------- */
-  
   .swiper.is--media .swiper-slide {
     flex-shrink: 0;
   
-    /*
-      Keep the width defined in Webflow.
-      Swiper uses slidesPerView: "auto".
-    */
-  
     width: auto;
-  
     height: auto;
   
     margin-right: 0 !important;
   }
   
   
-  /* --------------------------------------------------------------------------
-     CARD
-  -------------------------------------------------------------------------- */
-  
   .swiper.is--media .media--card {
     height: 100%;
   }
   
   
-  /* --------------------------------------------------------------------------
-     IMAGE
-  -------------------------------------------------------------------------- */
-  
   .swiper.is--media img {
     user-select: none;
-  
     -webkit-user-drag: none;
   }
   
   
   /*
     IMPORTANT:
-  
-    No rules for:
-    .heading-style-20
-  
-    All typography remains controlled by Webflow.
+    aucune règle sur .heading-style-20
   */
   
   
   /* ==========================================================================
-     4. FAQ
+     4. ACTUALITES FILTER
+  ========================================================================== */
+  
+  .faq--filter {
+    position: relative;
+  }
+  
+  
+  /* Trigger */
+  
+  .actualite--filter-trigger {
+    cursor: pointer;
+  
+    -webkit-tap-highlight-color: transparent;
+  }
+  
+  
+  /* Dropdown */
+  
+  .actualites--filter-drop {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+  
+    transform: translateY(0.5rem);
+  
+    transition:
+      opacity 0.3s ease,
+      transform 0.4s cubic-bezier(0.22, 1, 0.36, 1),
+      visibility 0s linear 0.3s;
+  
+    will-change:
+      opacity,
+      transform;
+  }
+  
+  
+  /* Open */
+  
+  .faq--filter.is--open
+  .actualites--filter-drop {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+  
+    transform: translateY(0);
+  
+    transition-delay: 0s;
+  }
+  
+  
+  /* Arrow */
+  
+  .faq--filter-arrow {
+    transform-origin: center;
+  
+    transition:
+      transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+  
+    will-change: transform;
+  }
+  
+  
+  .faq--filter.is--open
+  .faq--filter-arrow {
+    transform: rotate(180deg);
+  }
+  
+  
+  /* Selected option */
+  
+  .actualites--filter-drop
+  .filter--link.is--active {
+    opacity: 0.55;
+  
+    pointer-events: none;
+  }
+  
+  
+  /* ==========================================================================
+     5. FAQ
   ========================================================================== */
   
   .faq--item {
@@ -330,10 +352,6 @@
   }
   
   
-  /* --------------------------------------------------------------------------
-     QUESTION
-  -------------------------------------------------------------------------- */
-  
   .faq--question {
     cursor: pointer;
   
@@ -341,13 +359,8 @@
   }
   
   
-  /* --------------------------------------------------------------------------
-     ANSWER
-  -------------------------------------------------------------------------- */
-  
   .faq--answer {
     height: 0;
-  
     opacity: 0;
   
     overflow: hidden;
@@ -360,10 +373,6 @@
   }
   
   
-  /* --------------------------------------------------------------------------
-     ARROW
-  -------------------------------------------------------------------------- */
-  
   .faq--arrow {
     transform-origin: center;
   
@@ -371,34 +380,21 @@
   }
   
   
-  /* --------------------------------------------------------------------------
-     OPEN STATE
-  -------------------------------------------------------------------------- */
-  
   .faq--item.is--open {
-    /*
-      Exact design values:
-  
-      X      = 0
-      Y      = 0
-      Blur   = 100px
-      Spread = 0
-      Color  = #CFF4FF
-    */
-  
     box-shadow:
       0 0 100px 0
       #cff4ff !important;
   }
   
   
-  .faq--item.is--open .faq--answer {
+  .faq--item.is--open
+  .faq--answer {
     pointer-events: auto;
   }
   
   
   /* ==========================================================================
-     5. REDUCED MOTION
+     6. REDUCED MOTION
   ========================================================================== */
   
   @media (prefers-reduced-motion: reduce) {
@@ -408,6 +404,8 @@
     .metier--card,
     .metier--card .metier--card-text .heading-style-40,
     .metier--card .metier--card-text .btn,
+    .actualites--filter-drop,
+    .faq--filter-arrow,
     .faq--item {
       transition-duration: 0.01ms !important;
     }

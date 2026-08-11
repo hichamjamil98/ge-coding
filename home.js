@@ -22,6 +22,8 @@
   
       initMediaSlider();
   
+      initActualitesFilter();
+  
       initFAQ();
   
     });
@@ -186,19 +188,9 @@
                WIDTH
             ================================================================ */
   
-            /*
-              Respect Webflow/CSS slide width.
-            */
-  
             slidesPerView: "auto",
   
             slidesPerGroup: 1,
-  
-  
-            /*
-              Gap is controlled in CSS:
-              gap: 2rem
-            */
   
             spaceBetween: 0,
   
@@ -207,7 +199,16 @@
                SPEED
             ================================================================ */
   
-            speed: 800,
+            speed: 850,
+  
+  
+            /* ================================================================
+               TRUE INFINITE LOOP
+            ================================================================ */
+  
+            loop: true,
+  
+            loopAdditionalSlides: 6,
   
   
             /* ================================================================
@@ -223,15 +224,6 @@
               pauseOnMouseEnter: true
   
             },
-  
-  
-            /* ================================================================
-               REPEAT
-            ================================================================ */
-  
-            loop: false,
-  
-            rewind: true,
   
   
             /* ================================================================
@@ -273,9 +265,11 @@
   
             watchOverflow: false,
   
-            observer: false,
+            observer: true,
   
-            observeParents: false,
+            observeParents: true,
+  
+            observeSlideChildren: true,
   
             resizeObserver: true
   
@@ -289,7 +283,335 @@
   
   
     /* ==========================================================================
-       4. FAQ
+       4. ACTUALITES FILTER
+    ========================================================================== */
+  
+    function initActualitesFilter() {
+  
+      const filters = document.querySelectorAll(
+        ".faq--filter"
+      );
+  
+  
+      if (!filters.length) return;
+  
+  
+      filters.forEach((filter) => {
+  
+        const trigger = filter.querySelector(
+          ".actualite--filter-trigger"
+        );
+  
+  
+        const dropdown = filter.querySelector(
+          ".actualites--filter-drop"
+        );
+  
+  
+        const filterText = filter.querySelector(
+          ".filter--text"
+        );
+  
+  
+        if (!trigger || !dropdown) return;
+  
+  
+  
+        /* ----------------------------------------------------------------------
+           Accessibility
+        ---------------------------------------------------------------------- */
+  
+        trigger.setAttribute(
+          "role",
+          "button"
+        );
+  
+  
+        trigger.setAttribute(
+          "tabindex",
+          "0"
+        );
+  
+  
+        trigger.setAttribute(
+          "aria-expanded",
+          "false"
+        );
+  
+  
+  
+        /* ----------------------------------------------------------------------
+           Toggle
+        ---------------------------------------------------------------------- */
+  
+        const toggle = () => {
+  
+          const isOpen =
+            filter.classList.contains(
+              "is--open"
+            );
+  
+  
+          filters.forEach((otherFilter) => {
+  
+            if (
+              otherFilter !== filter
+            ) {
+  
+              closeFilter(otherFilter);
+  
+            }
+  
+          });
+  
+  
+          if (isOpen) {
+  
+            closeFilter(filter);
+  
+          }
+  
+          else {
+  
+            openFilter(filter);
+  
+          }
+  
+        };
+  
+  
+  
+        /* ----------------------------------------------------------------------
+           Trigger click
+        ---------------------------------------------------------------------- */
+  
+        trigger.addEventListener(
+          "click",
+          (event) => {
+  
+            event.preventDefault();
+  
+            event.stopPropagation();
+  
+            toggle();
+  
+          }
+        );
+  
+  
+  
+        /* ----------------------------------------------------------------------
+           Keyboard
+        ---------------------------------------------------------------------- */
+  
+        trigger.addEventListener(
+          "keydown",
+          (event) => {
+  
+            if (
+              event.key === "Enter" ||
+              event.key === " "
+            ) {
+  
+              event.preventDefault();
+  
+              toggle();
+  
+            }
+  
+  
+            if (
+              event.key === "Escape"
+            ) {
+  
+              closeFilter(filter);
+  
+            }
+  
+          }
+        );
+  
+  
+  
+        /* ----------------------------------------------------------------------
+           Filter links
+        ---------------------------------------------------------------------- */
+  
+        const links = dropdown.querySelectorAll(
+          ".filter--link"
+        );
+  
+  
+        links.forEach((link) => {
+  
+          link.addEventListener(
+            "click",
+            (event) => {
+  
+              event.preventDefault();
+  
+  
+              const selectedLabel =
+                link.textContent.trim();
+  
+  
+  
+              /* ==============================================================
+                 UPDATE TRIGGER TEXT
+              ============================================================== */
+  
+              if (filterText) {
+  
+                filterText.textContent =
+                  selectedLabel;
+  
+              }
+  
+  
+  
+              /* ==============================================================
+                 ACTIVE STATE
+              ============================================================== */
+  
+              links.forEach((item) => {
+  
+                item.classList.remove(
+                  "is--active"
+                );
+  
+              });
+  
+  
+              link.classList.add(
+                "is--active"
+              );
+  
+  
+  
+              /* ==============================================================
+                 CLOSE DROPDOWN
+              ============================================================== */
+  
+              closeFilter(filter);
+  
+            }
+          );
+  
+        });
+  
+      });
+  
+  
+  
+      /* ========================================================================
+         CLICK OUTSIDE
+      ======================================================================== */
+  
+      document.addEventListener(
+        "click",
+        (event) => {
+  
+          filters.forEach((filter) => {
+  
+            if (
+              !filter.contains(
+                event.target
+              )
+            ) {
+  
+              closeFilter(filter);
+  
+            }
+  
+          });
+  
+        }
+      );
+  
+  
+  
+      /* ========================================================================
+         ESCAPE
+      ======================================================================== */
+  
+      document.addEventListener(
+        "keydown",
+        (event) => {
+  
+          if (
+            event.key !== "Escape"
+          ) {
+  
+            return;
+  
+          }
+  
+  
+          filters.forEach((filter) => {
+  
+            closeFilter(filter);
+  
+          });
+  
+        }
+      );
+  
+  
+  
+      /* ========================================================================
+         OPEN
+      ======================================================================== */
+  
+      function openFilter(filter) {
+  
+        const trigger = filter.querySelector(
+          ".actualite--filter-trigger"
+        );
+  
+  
+        filter.classList.add(
+          "is--open"
+        );
+  
+  
+        trigger?.setAttribute(
+          "aria-expanded",
+          "true"
+        );
+  
+      }
+  
+  
+  
+      /* ========================================================================
+         CLOSE
+      ======================================================================== */
+  
+      function closeFilter(filter) {
+  
+        const trigger = filter.querySelector(
+          ".actualite--filter-trigger"
+        );
+  
+  
+        filter.classList.remove(
+          "is--open"
+        );
+  
+  
+        trigger?.setAttribute(
+          "aria-expanded",
+          "false"
+        );
+  
+      }
+  
+    }
+  
+  
+  
+    /* ==========================================================================
+       5. FAQ
     ========================================================================== */
   
     function initFAQ() {
@@ -463,10 +785,6 @@
         }
   
   
-        /*
-          Only one open FAQ.
-        */
-  
         items.forEach((otherItem) => {
   
           if (
@@ -520,11 +838,6 @@
         }
   
   
-  
-        /*
-          Activate open state + shadow.
-        */
-  
         item.classList.add(
           "is--open"
         );
@@ -535,11 +848,6 @@
           "true"
         );
   
-  
-  
-        /* ----------------------------------------------------------------------
-           Measure target height
-        ---------------------------------------------------------------------- */
   
         gsap.set(
           answer,
@@ -558,11 +866,6 @@
         const targetHeight =
           answer.scrollHeight;
   
-  
-  
-        /* ----------------------------------------------------------------------
-           Animate
-        ---------------------------------------------------------------------- */
   
         gsap.fromTo(
           answer,
@@ -601,11 +904,6 @@
           }
         );
   
-  
-  
-        /* ----------------------------------------------------------------------
-           Arrow
-        ---------------------------------------------------------------------- */
   
         if (arrow) {
   
@@ -681,11 +979,6 @@
         }
   
   
-  
-        /* ----------------------------------------------------------------------
-           Animate close
-        ---------------------------------------------------------------------- */
-  
         gsap.to(
           answer,
           {
@@ -701,10 +994,6 @@
             overwrite: true,
   
             onComplete: () => {
-  
-              /*
-                Remove shadow only when fully closed.
-              */
   
               item.classList.remove(
                 "is--open"
@@ -727,11 +1016,6 @@
           }
         );
   
-  
-  
-        /* ----------------------------------------------------------------------
-           Arrow
-        ---------------------------------------------------------------------- */
   
         if (arrow) {
   
