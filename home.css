@@ -35,9 +35,9 @@
   }
   
   
-  /* --------------------------------------------------------------------------
+  /* ==========================================================================
      ECOLES — HOVER
-  -------------------------------------------------------------------------- */
+  ========================================================================== */
   
   @media (hover: hover) and (pointer: fine) {
   
@@ -89,9 +89,9 @@
   }
   
   
-  /* --------------------------------------------------------------------------
+  /* ==========================================================================
      ECOLES — KEYBOARD
-  -------------------------------------------------------------------------- */
+  ========================================================================== */
   
   .is--home-subhero
   .groupe--ecole-item:focus-within
@@ -127,18 +127,18 @@
   
   
   /*
-    IMPORTANT:
+    IMPORTANT
   
     - aucune modification de l'image
     - aucun zoom
     - aucune modification de .mask--82
-    - aucun changement du layout Webflow
+    - aucun changement de layout
   */
   
   
-  /* --------------------------------------------------------------------------
-     TITLE
-  -------------------------------------------------------------------------- */
+  /* ==========================================================================
+     METIERS — TITLE
+  ========================================================================== */
   
   .metier--card
   .metier--card-text
@@ -153,9 +153,9 @@
   }
   
   
-  /* --------------------------------------------------------------------------
-     BUTTON
-  -------------------------------------------------------------------------- */
+  /* ==========================================================================
+     METIERS — BUTTON
+  ========================================================================== */
   
   .metier--card
   .metier--card-text
@@ -183,29 +183,25 @@
   @media (hover: hover) and (pointer: fine) {
   
     /*
-      Valeurs EXACTES du shadow Webflow :
+      Shadow Webflow:
   
-      X      = 0px
-      Y      = 0px
+      X      = 0
+      Y      = 0
       Blur   = 100px
-      Size   = 40px
-      Type   = Outside
+      Spread = 40px
   
-      Seule la couleur change.
+      Seule la couleur vient du background
+      de .metier--card.
     */
   
     .metier--card:hover {
       box-shadow:
-        0px 0px 100px 40px
+        0 0 100px 40px
         var(--metier-color) !important;
     }
   
   
-    /*
-      Titre :
-      → droite 8px
-      → couleur du background .metier--card
-    */
+    /* Title → RIGHT + CMS color */
   
     .metier--card:hover
     .metier--card-text
@@ -216,11 +212,7 @@
     }
   
   
-    /*
-      Bouton :
-      → gauche 8px
-      → background = couleur .metier--card
-    */
+    /* Button → LEFT + CMS color */
   
     .metier--card:hover
     .metier--card-text
@@ -258,6 +250,7 @@
   
   .swiper.is--media .swiper-slide {
     flex-shrink: 0;
+  
     height: auto;
   }
   
@@ -279,11 +272,16 @@
   
   .faq--item {
     overflow: hidden;
+  
+    box-shadow: none !important;
+  
+    transition:
+      box-shadow 0.45s cubic-bezier(0.22, 1, 0.36, 1);
   }
   
   
   /* --------------------------------------------------------------------------
-     Question
+     QUESTION
   -------------------------------------------------------------------------- */
   
   .faq--question {
@@ -294,12 +292,11 @@
   
   
   /* --------------------------------------------------------------------------
-     Answer
+     ANSWER
   -------------------------------------------------------------------------- */
   
   .faq--answer {
     height: 0;
-  
     opacity: 0;
   
     overflow: hidden;
@@ -311,7 +308,7 @@
   
   
   /* --------------------------------------------------------------------------
-     Arrow
+     ARROW
   -------------------------------------------------------------------------- */
   
   .faq--arrow {
@@ -322,8 +319,15 @@
   
   
   /* --------------------------------------------------------------------------
-     Open state
+     OPEN STATE
   -------------------------------------------------------------------------- */
+  
+  .faq--item.is--open {
+    box-shadow:
+      0 0 100px 40px
+      rgba(0, 0, 0, 0.08) !important;
+  }
+  
   
   .faq--item.is--open .faq--answer {
     pointer-events: auto;
@@ -340,7 +344,8 @@
     .is--home-subhero .ecole--hover-link,
     .metier--card,
     .metier--card .metier--card-text .heading-style-40,
-    .metier--card .metier--card-text .btn {
+    .metier--card .metier--card-text .btn,
+    .faq--item {
       transition-duration: 0.01ms !important;
     }
   

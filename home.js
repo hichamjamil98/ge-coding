@@ -97,13 +97,14 @@
     /* ==========================================================================
        2. METIER CARDS
   
-       La couleur utilisée pour :
+       Color source:
   
+       background-color of .metier--card
+  
+       Used for:
        - shadow
-       - titre hover
-       - button hover
-  
-       vient directement du background-color de .metier--card.
+       - title on hover
+       - button on hover
     ========================================================================== */
   
     function initMetierCards() {
@@ -118,27 +119,22 @@
   
       cards.forEach((card) => {
   
-        const computed =
+        const styles =
           window.getComputedStyle(card);
   
   
-        const backgroundColor =
-          computed.backgroundColor;
+        const color =
+          styles.backgroundColor;
   
-  
-  
-        /* ----------------------------------------------------------------------
-           Ignore transparent backgrounds
-        ---------------------------------------------------------------------- */
   
         if (
-          !backgroundColor ||
-          backgroundColor === "transparent" ||
-          backgroundColor === "rgba(0, 0, 0, 0)"
+          !color ||
+          color === "transparent" ||
+          color === "rgba(0, 0, 0, 0)"
         ) {
   
           console.warn(
-            "GE Home: .metier--card has no background color.",
+            "GE Home: missing background-color on .metier--card",
             card
           );
   
@@ -147,14 +143,9 @@
         }
   
   
-  
-        /* ----------------------------------------------------------------------
-           Store background color as CSS variable
-        ---------------------------------------------------------------------- */
-  
         card.style.setProperty(
           "--metier-color",
-          backgroundColor
+          color
         );
   
       });
@@ -177,11 +168,6 @@
       if (!sliders.length) return;
   
   
-  
-      /* ------------------------------------------------------------------------
-         Check Swiper
-      ------------------------------------------------------------------------ */
-  
       if (typeof Swiper === "undefined") {
   
         console.warn(
@@ -193,7 +179,6 @@
       }
   
   
-  
       sliders.forEach((slider) => {
   
         /*
@@ -203,13 +188,12 @@
         if (slider.swiper) return;
   
   
-  
         new Swiper(
           slider,
           {
   
             /* ================================================================
-               CORE
+               BASIC
             ================================================================ */
   
             slidesPerView: 1.15,
@@ -218,7 +202,33 @@
   
             spaceBetween: 16,
   
-            speed: 700,
+            speed: 750,
+  
+  
+  
+            /* ================================================================
+               LOOP
+            ================================================================ */
+  
+            loop: true,
+  
+            loopAdditionalSlides: 2,
+  
+  
+  
+            /* ================================================================
+               AUTOPLAY
+            ================================================================ */
+  
+            autoplay: {
+  
+              delay: 2800,
+  
+              disableOnInteraction: false,
+  
+              pauseOnMouseEnter: true
+  
+            },
   
   
   
@@ -228,12 +238,10 @@
   
             centeredSlides: false,
   
-            loop: false,
-  
   
   
             /* ================================================================
-               TOUCH / DRAG
+               INTERACTION
             ================================================================ */
   
             grabCursor: true,
@@ -270,6 +278,8 @@
   
             observeParents: true,
   
+            observeSlideChildren: true,
+  
             resizeObserver: true,
   
   
@@ -281,7 +291,7 @@
             breakpoints: {
   
   
-              /* Mobile landscape */
+              /* Mobile */
   
               480: {
   
@@ -351,11 +361,6 @@
       if (!items.length) return;
   
   
-  
-      /* ------------------------------------------------------------------------
-         GSAP check
-      ------------------------------------------------------------------------ */
-  
       if (typeof gsap === "undefined") {
   
         console.warn(
@@ -365,7 +370,6 @@
         return;
   
       }
-  
   
   
       items.forEach((item) => {
@@ -389,9 +393,9 @@
   
   
   
-        /* ======================================================================
-           ACCESSIBILITY
-        ====================================================================== */
+        /* ----------------------------------------------------------------------
+           Accessibility
+        ---------------------------------------------------------------------- */
   
         question.setAttribute(
           "role",
@@ -412,9 +416,9 @@
   
   
   
-        /* ======================================================================
-           INITIAL STATE
-        ====================================================================== */
+        /* ----------------------------------------------------------------------
+           Initial state
+        ---------------------------------------------------------------------- */
   
         gsap.set(
           answer,
@@ -445,9 +449,9 @@
   
   
   
-        /* ======================================================================
-           CLICK
-        ====================================================================== */
+        /* ----------------------------------------------------------------------
+           Click
+        ---------------------------------------------------------------------- */
   
         question.addEventListener(
           "click",
@@ -460,9 +464,9 @@
   
   
   
-        /* ======================================================================
-           KEYBOARD
-        ====================================================================== */
+        /* ----------------------------------------------------------------------
+           Keyboard
+        ---------------------------------------------------------------------- */
   
         question.addEventListener(
           "keydown",
@@ -511,30 +515,29 @@
   
           closeFAQ(item);
   
-        }
-  
-        else {
-  
-          /*
-            One open FAQ at a time.
-          */
-  
-          items.forEach((otherItem) => {
-  
-            if (
-              otherItem !== item
-            ) {
-  
-              closeFAQ(otherItem);
-  
-            }
-  
-          });
-  
-  
-          openFAQ(item);
+          return;
   
         }
+  
+  
+        /*
+          Only one FAQ open.
+        */
+  
+        items.forEach((otherItem) => {
+  
+          if (
+            otherItem !== item
+          ) {
+  
+            closeFAQ(otherItem);
+  
+          }
+  
+        });
+  
+  
+        openFAQ(item);
   
       }
   
@@ -564,7 +567,6 @@
         if (!answer) return;
   
   
-  
         gsap.killTweensOf(answer);
   
   
@@ -575,6 +577,11 @@
         }
   
   
+        /*
+          Add this BEFORE animation.
+  
+          This is what activates the shadow.
+        */
   
         item.classList.add(
           "is--open"
@@ -589,7 +596,7 @@
   
   
         /* ----------------------------------------------------------------------
-           Animate answer
+           Measure content height
         ---------------------------------------------------------------------- */
   
         gsap.set(
@@ -606,9 +613,14 @@
         );
   
   
-        const height =
-          answer.offsetHeight;
+        const targetHeight =
+          answer.scrollHeight;
   
+  
+  
+        /* ----------------------------------------------------------------------
+           Animate
+        ---------------------------------------------------------------------- */
   
         gsap.fromTo(
           answer,
@@ -623,7 +635,7 @@
   
           {
   
-            height: height,
+            height: targetHeight,
   
             opacity: 1,
   
@@ -711,17 +723,10 @@
         if (!answer) return;
   
   
-  
-        item.classList.remove(
-          "is--open"
-        );
-  
-  
         question?.setAttribute(
           "aria-expanded",
           "false"
         );
-  
   
   
         gsap.killTweensOf(answer);
@@ -736,7 +741,7 @@
   
   
         /* ----------------------------------------------------------------------
-           Answer
+           Close answer
         ---------------------------------------------------------------------- */
   
         gsap.to(
@@ -754,6 +759,19 @@
             overwrite: true,
   
             onComplete: () => {
+  
+              /*
+                Remove is--open AFTER closing.
+  
+                The shadow therefore stays visible
+                during the close animation and disappears
+                once the FAQ is fully closed.
+              */
+  
+              item.classList.remove(
+                "is--open"
+              );
+  
   
               gsap.set(
                 answer,
