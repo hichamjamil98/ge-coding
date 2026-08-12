@@ -766,3 +766,228 @@
 
 
 })();
+/* ==========================================================================
+   MOBILE NAVIGATION — HORIZONTAL DRAG / SCROLL
+   Keeps dropdown menus visible outside the navigation container
+   ========================================================================== */
+
+   document.addEventListener("DOMContentLoaded", () => {
+    const nav = document.querySelector(".container--nav-bottom");
+    if (!nav) return;
+  
+    const items = Array.from(nav.children);
+  
+    const MOBILE_BREAKPOINT = 767;
+    const RIGHT_PADDING = 16; // espace conservé après le dernier item
+  
+    let currentX = 0;
+    let startX = 0;
+    let startTranslate = 0;
+    let isDragging = false;
+    let hasMoved = false;
+  
+    function isMobile() {
+      return window.innerWidth <= MOBILE_BREAKPOINT;
+    }
+  
+  
+    /* --------------------------------------------------------------------------
+       Scroll boundaries
+       -------------------------------------------------------------------------- */
+  
+    function getBounds() {
+      if (!items.length) {
+        return {
+          min: 0,
+          max: 0
+        };
+      }
+  
+      const navRect = nav.getBoundingClientRect();
+  
+      const firstRect = items[0].getBoundingClientRect();
+      const lastRect = items[items.length - 1].getBoundingClientRect();
+  
+      // Positions naturelles, sans le translate actuel
+      const naturalLeft = firstRect.left - currentX;
+      const naturalRight = lastRect.right - currentX;
+  
+      const contentWidth = naturalRight - naturalLeft;
+      const availableWidth = navRect.width;
+  
+      return {
+        max: 0,
+  
+        // RIGHT_PADDING permet de garder de l'espace
+        // visible après le dernier élément.
+        min: Math.min(
+          0,
+          availableWidth - contentWidth - RIGHT_PADDING
+        )
+      };
+    }
+  
+  
+    /* --------------------------------------------------------------------------
+       Clamp position
+       -------------------------------------------------------------------------- */
+  
+    function clamp(value) {
+      const bounds = getBounds();
+  
+      return Math.max(
+        bounds.min,
+        Math.min(bounds.max, value)
+      );
+    }
+  
+  
+    /* --------------------------------------------------------------------------
+       Apply horizontal movement
+       -------------------------------------------------------------------------- */
+  
+    function setTranslate(value, animate = false) {
+      currentX = clamp(value);
+  
+      items.forEach((item) => {
+        item.style.transition = animate
+          ? "transform 0.35s cubic-bezier(.22,.61,.36,1)"
+          : "none";
+  
+        item.style.transform = `translate3d(${currentX}px, 0, 0)`;
+      });
+    }
+  
+  
+    /* ==========================================================================
+       TOUCH
+       ========================================================================== */
+  
+    nav.addEventListener(
+      "touchstart",
+      (e) => {
+        if (!isMobile()) return;
+  
+        isDragging = true;
+        hasMoved = false;
+  
+        startX = e.touches[0].clientX;
+        startTranslate = currentX;
+  
+        items.forEach((item) => {
+          item.style.transition = "none";
+        });
+      },
+      { passive: true }
+    );
+  
+  
+    nav.addEventListener(
+      "touchmove",
+      (e) => {
+        if (!isMobile() || !isDragging) return;
+  
+        const x = e.touches[0].clientX;
+        const deltaX = x - startX;
+  
+        if (Math.abs(deltaX) > 5) {
+          hasMoved = true;
+        }
+  
+        setTranslate(startTranslate + deltaX);
+      },
+      { passive: true }
+    );
+  
+  
+    nav.addEventListener(
+      "touchend",
+      () => {
+        if (!isMobile()) return;
+  
+        isDragging = false;
+  
+        setTranslate(currentX, true);
+      },
+      { passive: true }
+    );
+  
+  
+    /* ==========================================================================
+       MOUSE DRAG
+       ========================================================================== */
+  
+    nav.addEventListener("mousedown", (e) => {
+      if (!isMobile()) return;
+  
+      isDragging = true;
+      hasMoved = false;
+  
+      startX = e.clientX;
+      startTranslate = currentX;
+  
+      items.forEach((item) => {
+        item.style.transition = "none";
+      });
+    });
+  
+  
+    window.addEventListener("mousemove", (e) => {
+      if (!isMobile() || !isDragging) return;
+  
+      const deltaX = e.clientX - startX;
+  
+      if (Math.abs(deltaX) > 5) {
+        hasMoved = true;
+      }
+  
+      setTranslate(startTranslate + deltaX);
+    });
+  
+  
+    window.addEventListener("mouseup", () => {
+      if (!isDragging) return;
+  
+      isDragging = false;
+  
+      setTranslate(currentX, true);
+    });
+  
+  
+    /* ==========================================================================
+       PREVENT CLICK AFTER DRAG
+       ========================================================================== */
+  
+    nav.addEventListener(
+      "click",
+      (e) => {
+        if (!hasMoved) return;
+  
+        e.preventDefault();
+        e.stopPropagation();
+  
+        hasMoved = false;
+      },
+      true
+    );
+  
+  
+    /* ==========================================================================
+       RESIZE
+       ========================================================================== */
+  
+    window.addEventListener("resize", () => {
+      if (!isMobile()) {
+        currentX = 0;
+  
+        items.forEach((item) => {
+          item.style.transform = "";
+          item.style.transition = "";
+        });
+  
+        return;
+      }
+  
+      setTranslate(currentX);
+    });
+  });
