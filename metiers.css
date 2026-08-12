@@ -1,0 +1,108 @@
+/* ==========================================================================
+   GE — METIERS PAGE — CARD HOVER ONLY
+========================================================================== */
+
+.metier--card-parent {
+    overflow: visible;
+  }
+  
+  .metier--card {
+    --metier-color: transparent;
+  
+    transition:
+      box-shadow 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  
+  
+  /* TITLE */
+  
+  .metier--card
+  .metier--card-text
+  .heading-style-40 {
+    transform: translateX(0);
+  
+    transition:
+      transform 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+      color 0.35s ease;
+  
+    will-change:
+      transform,
+      color;
+  }
+  
+  
+  /* BUTTON */
+  
+  .metier--card
+  .metier--card-text
+  .btn {
+    transform: translateX(0);
+  
+    transition:
+      transform 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+      background-color 0.35s ease,
+      border-color 0.35s ease,
+      color 0.35s ease;
+  
+    will-change:
+      transform,
+      background-color,
+      border-color,
+      color;
+  }
+  
+  
+  /* ==========================================================================
+     HOVER
+  ========================================================================== */
+  
+  @media (hover: hover) and (pointer: fine) {
+  
+    .metier--card:hover {
+      box-shadow:
+        0 0 100px 40px
+        var(--metier-color) !important;
+    }
+  
+  
+    /* Title → droite */
+  
+    .metier--card:hover
+    .metier--card-text
+    .heading-style-40 {
+      transform: translateX(8px);
+  
+      color:
+        var(--metier-color) !important;
+    }
+  
+  
+    /* Button → gauche */
+  
+    .metier--card:hover
+    .metier--card-text
+    .btn {
+      transform: translateX(-8px);
+  
+      background-color:
+        var(--metier-color) !important;
+  
+      border-color:
+        var(--metier-color) !important;
+    }
+  
+  }
+  
+  
+  /* REDUCED MOTION */
+  
+  @media (prefers-reduced-motion: reduce) {
+  
+    .metier--card,
+    .metier--card .heading-style-40,
+    .metier--card .btn {
+      transition-duration:
+        0.01ms !important;
+    }
+  
+  }
