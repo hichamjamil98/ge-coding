@@ -1,0 +1,158 @@
+/* ==========================================================================
+   GE — ACTUALITES PAGE — FILTER ONLY
+========================================================================== */
+
+
+/* ==========================================================================
+   FILTER WRAPPER
+========================================================================== */
+
+.filter--top {
+    position: relative;
+    z-index: 100;
+    overflow: visible !important;
+  }
+  
+  .filter--top .faq--filter {
+    position: relative;
+    z-index: 101;
+    overflow: visible !important;
+  }
+  
+  .filter--top .faq--filter.is--open {
+    z-index: 10000;
+  }
+  
+  
+  /* ==========================================================================
+     FILTER TRIGGER
+  ========================================================================== */
+  
+  .filter--top .actualite--filter-trigger {
+    position: relative;
+    z-index: 10002;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+  
+  
+  /* ==========================================================================
+     FILTER LABEL
+  ========================================================================== */
+  
+  .filter--text {
+    position: relative;
+    z-index: 2;
+    display: block;
+    opacity: 1 !important;
+    visibility: visible !important;
+  }
+  
+  
+  /* ==========================================================================
+     FILTER DROPDOWN
+  ========================================================================== */
+  
+  .filter--top .actualites--filter-drop {
+    z-index: 10001;
+  
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+  
+    transform: translateY(0.5rem);
+  
+    transition:
+      opacity 0.28s ease,
+      transform 0.4s cubic-bezier(0.22, 1, 0.36, 1),
+      visibility 0s linear 0.4s;
+  
+    will-change:
+      opacity,
+      transform;
+  }
+  
+  
+  /* OPEN */
+  
+  .filter--top
+  .faq--filter.is--open
+  .actualites--filter-drop {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+  
+    transform: translateY(0);
+  
+    transition-delay: 0s;
+  }
+  
+  
+  /* ==========================================================================
+     FILTER ARROW
+  ========================================================================== */
+  
+  .faq--filter-arrow {
+    position: relative;
+    z-index: 2;
+  
+    transform-origin: center;
+  
+    transition:
+      transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+  
+    will-change:
+      transform;
+  }
+  
+  .faq--filter.is--open
+  .faq--filter-arrow {
+    transform: rotate(180deg);
+  }
+  
+  
+  /* ==========================================================================
+     FILTER OPTIONS
+  ========================================================================== */
+  
+  .actualites--filter-drop
+  [filter="text"] {
+    cursor: pointer;
+  
+    transition:
+      opacity 0.25s ease;
+  }
+  
+  .actualites--filter-drop
+  [filter="text"]:hover {
+    opacity: 0.6;
+  }
+  
+  .actualites--filter-drop
+  [filter="text"].is--active {
+    opacity: 0.45;
+  }
+  
+  
+  /* ==========================================================================
+     CMS FILTER VALUE
+  ========================================================================== */
+  
+  .filter--result {
+    display: none !important;
+  }
+  
+  
+  /* ==========================================================================
+     ACCESSIBILITY
+  ========================================================================== */
+  
+  @media (prefers-reduced-motion: reduce) {
+  
+    .actualites--filter-drop,
+    .faq--filter-arrow {
+      transition-duration:
+        0.01ms !important;
+    }
+  
+  }
