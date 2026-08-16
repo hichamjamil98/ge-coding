@@ -41,23 +41,42 @@
   
       const groups = Array.from(hero.querySelectorAll(".ecole--group"));
       const schoolLinks = Array.from(hero.querySelectorAll(".ecole--link"));
-      const schoolTabs = Array.from(hero.querySelectorAll(".tabs--wrapper > .tabs--ecole"));
+      const schoolTabs = Array.from(
+        hero.querySelectorAll(".tabs--wrapper > .tabs--ecole")
+      );
   
-      if (!groups.length && !schoolLinks.length && !schoolTabs.length) return;
+      if (!schoolLinks.length || !schoolTabs.length) return;
   
-      // Cache tous les blocs Tabs au chargement.
-      schoolTabs.forEach((tab) => {
-        tab.classList.remove("is--ecole-visible");
-        tab.setAttribute("aria-hidden", "true");
-      });
+      function activateSchool(index) {
+        const matchingTabs = schoolTabs[index];
+        const matchingLink = schoolLinks[index];
   
-      // Aucun lien n'est actif au chargement.
-      schoolLinks.forEach((link) => {
-        link.classList.remove("is--ecole-active");
-        link.removeAttribute("aria-current");
-      });
+        if (!matchingTabs || !matchingLink) return;
   
-      // Dropdowns.
+        schoolLinks.forEach((link, i) => {
+          const active = i === index;
+  
+          link.classList.toggle("is--ecole-active", active);
+  
+          if (active) {
+            link.setAttribute("aria-current", "true");
+          } else {
+            link.removeAttribute("aria-current");
+          }
+        });
+  
+        schoolTabs.forEach((tab, i) => {
+          const active = i === index;
+  
+          tab.classList.toggle("is--ecole-visible", active);
+          tab.setAttribute("aria-hidden", active ? "false" : "true");
+        });
+      }
+  
+      /* Tous les dropdowns fermés au départ */
+      closeAllEcoleGroups();
+  
+      /* OUVRIR / FERMER LES DROPDOWNS */
       groups.forEach((group) => {
         const trigger = group.querySelector(".ecole--triiger");
         if (!trigger) return;
@@ -66,14 +85,20 @@
         trigger.setAttribute("tabindex", "0");
         trigger.setAttribute("aria-expanded", "false");
   
-        const toggleGroup = () => {
-          const willOpen = !group.classList.contains("is--open");
+        function toggleGroup() {
+          const isOpen = group.classList.contains("is--open");
   
+          /* ferme les autres */
           closeAllEcoleGroups(group);
   
-          group.classList.toggle("is--open", willOpen);
-          trigger.setAttribute("aria-expanded", willOpen ? "true" : "false");
-        };
+          /* même trigger : ouvre si fermé, ferme si ouvert */
+          if (isOpen) {
+            closeEcoleGroup(group);
+          } else {
+            group.classList.add("is--open");
+            trigger.setAttribute("aria-expanded", "true");
+          }
+        }
   
         trigger.addEventListener("click", (event) => {
           event.preventDefault();
@@ -84,6 +109,7 @@
         trigger.addEventListener("keydown", (event) => {
           if (event.key === "Enter" || event.key === " ") {
             event.preventDefault();
+            event.stopPropagation();
             toggleGroup();
           }
   
@@ -93,38 +119,21 @@
         });
       });
   
-      // Correspondance directe : lien n°1 => tabs n°1, etc.
+      /* LIEN ECOLE => TAB CORRESPONDANT */
       schoolLinks.forEach((link, index) => {
         link.addEventListener("click", (event) => {
           event.preventDefault();
+          event.stopPropagation();
   
-          const matchingTabs = schoolTabs[index];
-          if (!matchingTabs) {
-            console.warn(`ECOL: aucun .tabs--ecole trouvé pour le lien index ${index}.`);
-            return;
-          }
+          activateSchool(index);
   
-          schoolLinks.forEach((otherLink) => {
-            otherLink.classList.remove("is--ecole-active");
-            otherLink.removeAttribute("aria-current");
-          });
-  
-          schoolTabs.forEach((tab) => {
-            tab.classList.remove("is--ecole-visible");
-            tab.setAttribute("aria-hidden", "true");
-          });
-  
-          link.classList.add("is--ecole-active");
-          link.setAttribute("aria-current", "true");
-  
-          matchingTabs.classList.add("is--ecole-visible");
-          matchingTabs.setAttribute("aria-hidden", "false");
-  
-          // Ferme le dropdown après sélection.
-          const parentGroup = link.closest(".ecole--group");
-          if (parentGroup) closeEcoleGroup(parentGroup);
+          /* ferme le dropdown après sélection */
+          closeAllEcoleGroups();
         });
       });
+  
+      /* Premier lien + premier bloc Tabs actifs par défaut */
+      activateSchool(0);
     }
   
     function closeEcoleGroup(group) {
@@ -436,108 +445,3 @@
   })();
   
   
-  /* ==========================================================================
-     ECOLES HERO — DEFAULT / FINAL STATE
-     ========================================================================== */
-  document.addEventListener("DOMContentLoaded", function () {
-    const hero = document.querySelector(".is--ecoles-hero");
-    if (!hero) return;
-  
-    const groups = Array.from(hero.querySelectorAll(".ecole--group"));
-    const links = Array.from(hero.querySelectorAll(".ecole--link"));
-    const tabs = Array.from(hero.querySelectorAll(".tabs--ecole"));
-  
-    function closeGroups(except = null) {
-      groups.forEach((group) => {
-        if (group === except) return;
-  
-        group.classList.remove("is--open");
-  
-        const trigger = group.querySelector(".ecole--triiger");
-        if (trigger) {
-          trigger.setAttribute("aria-expanded", "false");
-        }
-      });
-    }
-  
-    function activateSchool(index) {
-      if (!links[index] || !tabs[index]) return;
-  
-      links.forEach((link, i) => {
-        const active = i === index;
-  
-        link.classList.toggle("is--ecole-active", active);
-  
-        if (active) {
-          link.setAttribute("aria-current", "true");
-        } else {
-          link.removeAttribute("aria-current");
-        }
-      });
-  
-      tabs.forEach((tab, i) => {
-        const active = i === index;
-  
-        tab.classList.toggle("is--ecole-visible", active);
-        tab.setAttribute("aria-hidden", active ? "false" : "true");
-      });
-    }
-  
-    /* Tous les dropdowns fermés au chargement */
-    closeGroups();
-  
-    groups.forEach((group) => {
-      const trigger = group.querySelector(".ecole--triiger");
-      if (!trigger) return;
-  
-      trigger.setAttribute("role", "button");
-      trigger.setAttribute("tabindex", "0");
-      trigger.setAttribute("aria-expanded", "false");
-  
-      function toggleGroup(event) {
-        event.preventDefault();
-        event.stopPropagation();
-  
-        const willOpen = !group.classList.contains("is--open");
-  
-        closeGroups(group);
-  
-        group.classList.toggle("is--open", willOpen);
-        trigger.setAttribute(
-          "aria-expanded",
-          willOpen ? "true" : "false"
-        );
-      }
-  
-      trigger.addEventListener("click", toggleGroup);
-  
-      trigger.addEventListener("keydown", (event) => {
-        if (event.key === "Enter" || event.key === " ") {
-          toggleGroup(event);
-        }
-  
-        if (event.key === "Escape") {
-          group.classList.remove("is--open");
-          trigger.setAttribute("aria-expanded", "false");
-        }
-      });
-    });
-  
-    links.forEach((link, index) => {
-      link.addEventListener("click", (event) => {
-        event.preventDefault();
-  
-        activateSchool(index);
-        closeGroups();
-      });
-    });
-  
-    document.addEventListener("click", (event) => {
-      if (!event.target.closest(".ecole--group")) {
-        closeGroups();
-      }
-    });
-  
-    /* Premier lien + premier groupe de tabs actifs par défaut */
-    activateSchool(0);
-  });
