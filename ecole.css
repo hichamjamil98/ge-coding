@@ -1,0 +1,283 @@
+/* ========================================================================== 
+   ECOL PAGE
+   - Hero schools dropdown + tabs
+   - Metiers hover
+   - Media filter + Swiper
+   ========================================================================== */
+
+/* ========================================================================== 
+   1. HERO — ECOLES DROPDOWN + ACTIVE TAB
+   ========================================================================== */
+
+   .is--ecoles-hero .ecole--group {
+    position: relative;
+  }
+  
+  .is--ecoles-hero .ecole--triiger {
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+  
+  .is--ecoles-hero .ecoles--list {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transform: translateY(0.5rem);
+    transition:
+      opacity 0.28s ease,
+      transform 0.4s cubic-bezier(0.22, 1, 0.36, 1),
+      visibility 0s linear 0.4s;
+    will-change: opacity, transform;
+  }
+  
+  .is--ecoles-hero .ecole--group.is--open .ecoles--list {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transform: translateY(0);
+    transition-delay: 0s;
+  }
+  
+  .is--ecoles-hero .ecole--arrow {
+    transform-origin: center;
+    transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+    will-change: transform;
+  }
+  
+  .is--ecoles-hero .ecole--group.is--open .ecole--arrow {
+    transform: rotate(180deg);
+  }
+  
+  .is--ecoles-hero .ecole--link {
+    transition: color 0.3s ease, opacity 0.3s ease;
+  }
+  
+  .is--ecoles-hero .ecole--link:hover {
+    opacity: 0.7;
+  }
+  
+  /*
+    CLASSE À MODIFIER SI TU VEUX CHANGER LA COULEUR DU LIEN ACTIF.
+  */
+  .is--ecoles-hero .ecole--link.is--ecole-active {
+    color: #FFAABB;
+  }
+  
+  /* Tous les groupes Tabs sont cachés par défaut. */
+  .is--ecoles-hero .tabs--ecole {
+    display: none !important;
+  }
+  
+  /* Seul le groupe correspondant au lien cliqué est affiché. */
+  .is--ecoles-hero .tabs--ecole.is--ecole-visible {
+    display: block !important;
+  }
+  
+  
+  /* ========================================================================== 
+     2. METIERS — HOVER
+     ========================================================================== */
+  
+  .metier--card-parent {
+    overflow: visible;
+  }
+  
+  .metier--card {
+    --metier-color: transparent;
+    transition: box-shadow 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  
+  .metier--card .metier--card-text .heading-style-40 {
+    transform: translateX(0);
+    transition:
+      transform 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+      color 0.35s ease;
+    will-change: transform, color;
+  }
+  
+  .metier--card .metier--card-text .btn {
+    transform: translateX(0);
+    transition:
+      transform 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+      background-color 0.35s ease,
+      border-color 0.35s ease,
+      color 0.35s ease;
+    will-change: transform, background-color, border-color, color;
+  }
+  
+  @media (hover: hover) and (pointer: fine) {
+    .metier--card:hover {
+      box-shadow: 0 0 6.25rem 2.5rem var(--metier-color) !important;
+    }
+  
+    .metier--card:hover .metier--card-text .heading-style-40 {
+      transform: translateX(0.5rem);
+      color: var(--metier-color) !important;
+    }
+  
+    .metier--card:hover .metier--card-text .btn {
+      transform: translateX(-0.5rem);
+      background-color: var(--metier-color) !important;
+      border-color: var(--metier-color) !important;
+    }
+  }
+  
+  
+  /* ========================================================================== 
+     3. MEDIA FILTER
+     ========================================================================== */
+  
+  .filter--top {
+    position: relative;
+    z-index: 100;
+    overflow: visible !important;
+  }
+  
+  .filter--top .faq--filter {
+    position: relative;
+    z-index: 101;
+    overflow: visible !important;
+  }
+  
+  .filter--top .faq--filter.is--open {
+    z-index: 10000;
+  }
+  
+  .filter--top .actualite--filter-trigger {
+    position: relative;
+    z-index: 10002;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+  
+  .filter--text {
+    position: relative;
+    z-index: 2;
+    display: block;
+    opacity: 1 !important;
+    visibility: visible !important;
+  }
+  
+  .filter--top .actualites--filter-drop {
+    z-index: 10001;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transform: translateY(0.5rem);
+    transition:
+      opacity 0.28s ease,
+      transform 0.4s cubic-bezier(0.22, 1, 0.36, 1),
+      visibility 0s linear 0.4s;
+    will-change: opacity, transform;
+  }
+  
+  .filter--top .faq--filter.is--open .actualites--filter-drop {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transform: translateY(0);
+    transition-delay: 0s;
+  }
+  
+  .faq--filter-arrow {
+    position: relative;
+    z-index: 2;
+    transform-origin: center;
+    transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+    will-change: transform;
+  }
+  
+  .faq--filter.is--open .faq--filter-arrow {
+    transform: rotate(180deg);
+  }
+  
+  .actualites--filter-drop [filter="text"] {
+    cursor: pointer;
+    transition: opacity 0.25s ease;
+  }
+  
+  .actualites--filter-drop [filter="text"]:hover {
+    opacity: 0.6;
+  }
+  
+  .actualites--filter-drop [filter="text"].is--active {
+    opacity: 0.45;
+  }
+  
+  .filter--result {
+    display: none !important;
+  }
+  
+  
+  /* ========================================================================== 
+     4. MEDIA SWIPER
+     ========================================================================== */
+  
+  .section.is--home-slider {
+    position: relative;
+    overflow: visible !important;
+  }
+  
+  .section.is--home-slider .filter--top {
+    position: relative;
+    z-index: 100;
+  }
+  
+  .section.is--home-slider .media--filter {
+    position: relative;
+    z-index: 101;
+    overflow: visible !important;
+  }
+  
+  .section.is--home-slider .media--filter .faq--filter.is--open {
+    z-index: 10000;
+  }
+  
+  .swiper.is--media {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    overflow: visible !important;
+    cursor: grab;
+  }
+  
+  .swiper.is--media:active {
+    cursor: grabbing;
+  }
+  
+  .swiper.is--media .swiper-wrapper {
+    display: flex;
+    overflow: visible;
+  }
+  
+  .swiper.is--media .swiper-slide {
+    flex-shrink: 0;
+    height: auto;
+  }
+  
+  .swiper.is--media .media--card {
+    height: 100%;
+  }
+  
+  .swiper.is--media img {
+    user-select: none;
+    -webkit-user-drag: none;
+  }
+  
+  
+  /* ========================================================================== 
+     5. REDUCED MOTION
+     ========================================================================== */
+  
+  @media (prefers-reduced-motion: reduce) {
+    .ecoles--list,
+    .ecole--arrow,
+    .ecole--link,
+    .metier--card,
+    .metier--card .heading-style-40,
+    .metier--card .btn,
+    .actualites--filter-drop,
+    .faq--filter-arrow {
+      transition-duration: 0.01ms !important;
+    }
+  }
