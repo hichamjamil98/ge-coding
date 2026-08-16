@@ -434,3 +434,110 @@
       });
     }
   })();
+  
+  
+  /* ==========================================================================
+     ECOLES HERO — DEFAULT / FINAL STATE
+     ========================================================================== */
+  document.addEventListener("DOMContentLoaded", function () {
+    const hero = document.querySelector(".is--ecoles-hero");
+    if (!hero) return;
+  
+    const groups = Array.from(hero.querySelectorAll(".ecole--group"));
+    const links = Array.from(hero.querySelectorAll(".ecole--link"));
+    const tabs = Array.from(hero.querySelectorAll(".tabs--ecole"));
+  
+    function closeGroups(except = null) {
+      groups.forEach((group) => {
+        if (group === except) return;
+  
+        group.classList.remove("is--open");
+  
+        const trigger = group.querySelector(".ecole--triiger");
+        if (trigger) {
+          trigger.setAttribute("aria-expanded", "false");
+        }
+      });
+    }
+  
+    function activateSchool(index) {
+      if (!links[index] || !tabs[index]) return;
+  
+      links.forEach((link, i) => {
+        const active = i === index;
+  
+        link.classList.toggle("is--ecole-active", active);
+  
+        if (active) {
+          link.setAttribute("aria-current", "true");
+        } else {
+          link.removeAttribute("aria-current");
+        }
+      });
+  
+      tabs.forEach((tab, i) => {
+        const active = i === index;
+  
+        tab.classList.toggle("is--ecole-visible", active);
+        tab.setAttribute("aria-hidden", active ? "false" : "true");
+      });
+    }
+  
+    /* Tous les dropdowns fermés au chargement */
+    closeGroups();
+  
+    groups.forEach((group) => {
+      const trigger = group.querySelector(".ecole--triiger");
+      if (!trigger) return;
+  
+      trigger.setAttribute("role", "button");
+      trigger.setAttribute("tabindex", "0");
+      trigger.setAttribute("aria-expanded", "false");
+  
+      function toggleGroup(event) {
+        event.preventDefault();
+        event.stopPropagation();
+  
+        const willOpen = !group.classList.contains("is--open");
+  
+        closeGroups(group);
+  
+        group.classList.toggle("is--open", willOpen);
+        trigger.setAttribute(
+          "aria-expanded",
+          willOpen ? "true" : "false"
+        );
+      }
+  
+      trigger.addEventListener("click", toggleGroup);
+  
+      trigger.addEventListener("keydown", (event) => {
+        if (event.key === "Enter" || event.key === " ") {
+          toggleGroup(event);
+        }
+  
+        if (event.key === "Escape") {
+          group.classList.remove("is--open");
+          trigger.setAttribute("aria-expanded", "false");
+        }
+      });
+    });
+  
+    links.forEach((link, index) => {
+      link.addEventListener("click", (event) => {
+        event.preventDefault();
+  
+        activateSchool(index);
+        closeGroups();
+      });
+    });
+  
+    document.addEventListener("click", (event) => {
+      if (!event.target.closest(".ecole--group")) {
+        closeGroups();
+      }
+    });
+  
+    /* Premier lien + premier groupe de tabs actifs par défaut */
+    activateSchool(0);
+  });

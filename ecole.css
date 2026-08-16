@@ -281,3 +281,39 @@
       transition-duration: 0.01ms !important;
     }
   }
+  
+  
+  /* ==========================================================================
+     ECOLES HERO — FINAL STATES
+     ========================================================================== */
+  
+  /* Fermé = aucun espace vide */
+  .is--ecoles-hero .ecoles--list {
+    display: none;
+  }
+  
+  .is--ecoles-hero .ecole--group.is--open .ecoles--list {
+    display: block;
+  }
+  
+  /* Un seul bloc école visible */
+  .is--ecoles-hero .tabs--ecole {
+    display: none !important;
+  }
+  
+  .is--ecoles-hero .tabs--ecole.is--ecole-visible {
+    display: block !important;
+  }
+  
+  /* LINK ACTIF — modifier cette couleur selon le cas */
+  .is--ecoles-hero .ecole--link.is--ecole-active {
+    background-color: #FFAABB;
+  }
+  
+  .is--ecoles-hero .ecole--arrow {
+    transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  
+  .is--ecoles-hero .ecole--group.is--open .ecole--arrow {
+    transform: rotate(180deg);
+  }
