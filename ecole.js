@@ -73,11 +73,10 @@
         });
       }
   
-      /* Tous les dropdowns fermés au départ */
-      closeAllEcoleGroups();
-  
-      /* OUVRIR / FERMER LES DROPDOWNS */
+      /* Dropdowns fermés au chargement */
       groups.forEach((group) => {
+        group.classList.remove("is--open");
+  
         const trigger = group.querySelector(".ecole--triiger");
         if (!trigger) return;
   
@@ -85,41 +84,30 @@
         trigger.setAttribute("tabindex", "0");
         trigger.setAttribute("aria-expanded", "false");
   
-        function toggleGroup() {
-          const isOpen = group.classList.contains("is--open");
-  
-          /* ferme les autres */
-          closeAllEcoleGroups(group);
-  
-          /* même trigger : ouvre si fermé, ferme si ouvert */
-          if (isOpen) {
-            closeEcoleGroup(group);
-          } else {
-            group.classList.add("is--open");
-            trigger.setAttribute("aria-expanded", "true");
-          }
-        }
-  
-        trigger.addEventListener("click", (event) => {
+        function toggleGroup(event) {
           event.preventDefault();
           event.stopPropagation();
-          toggleGroup();
-        });
+  
+          const willOpen = !group.classList.contains("is--open");
+  
+          group.classList.toggle("is--open", willOpen);
+          trigger.setAttribute(
+            "aria-expanded",
+            willOpen ? "true" : "false"
+          );
+        }
+  
+        /* Seul le trigger ouvre / ferme son dropdown */
+        trigger.addEventListener("click", toggleGroup);
   
         trigger.addEventListener("keydown", (event) => {
           if (event.key === "Enter" || event.key === " ") {
-            event.preventDefault();
-            event.stopPropagation();
-            toggleGroup();
-          }
-  
-          if (event.key === "Escape") {
-            closeEcoleGroup(group);
+            toggleGroup(event);
           }
         });
       });
   
-      /* LIEN ECOLE => TAB CORRESPONDANT */
+      /* Sélection école : change uniquement le contenu affiché */
       schoolLinks.forEach((link, index) => {
         link.addEventListener("click", (event) => {
           event.preventDefault();
@@ -127,8 +115,12 @@
   
           activateSchool(index);
   
-          /* ferme le dropdown après sélection */
-          closeAllEcoleGroups();
+          /*
+            IMPORTANT :
+            on NE ferme PAS le dropdown ici.
+            Il reste ouvert jusqu'au prochain clic
+            sur son propre .ecole--triiger.
+          */
         });
       });
   
@@ -443,5 +435,3 @@
       });
     }
   })();
-  
-  

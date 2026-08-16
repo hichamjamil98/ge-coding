@@ -59,9 +59,7 @@
   /*
     CLASSE À MODIFIER SI TU VEUX CHANGER LA COULEUR DU LIEN ACTIF.
   */
-  .is--ecoles-hero .ecole--link.is--ecole-active {
-    color: #FFAABB;
-  }
+  .is--ecoles-hero .ecole--link.is--ecole-active {}
   
   /* Tous les groupes Tabs sont cachés par défaut. */
   .is--ecoles-hero .tabs--ecole {
@@ -316,4 +314,18 @@
   
   .is--ecoles-hero .ecole--group.is--open .ecole--arrow {
     transform: rotate(180deg);
+  }
+  
+  
+  /* ==========================================================================
+     ACTIVE LINK — KEEP ORIGINAL TEXT COLOR
+     ========================================================================== */
+  
+  /*
+    Le JS ajoute uniquement .is--ecole-active.
+    On change uniquement le background.
+    Aucune couleur de texte n'est imposée ici.
+  */
+  .is--ecoles-hero .ecole--link.is--ecole-active {
+    background-color: #FFAABB;
   }
