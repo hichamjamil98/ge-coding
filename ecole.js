@@ -11,6 +11,7 @@
   
     document.addEventListener("DOMContentLoaded", () => {
       initEcoleHero();
+      initAnchorSchool();
       initMetierCards();
       initMediaSlider();
       initMediaFilter();
@@ -128,6 +129,47 @@
       activateSchool(0);
     }
   
+    /* ========================================================================
+       1.1. HERO — NAVBAR ANCHOR → ECOLE ACTIVE
+       ======================================================================== */
+
+    function initAnchorSchool() {
+      const hash = window.location.hash.replace("#", "");
+
+      if (!hash) return;
+
+      const targetLink = document.getElementById(hash);
+
+      if (
+        !targetLink ||
+        !targetLink.classList.contains("ecole--link")
+      ) {
+        return;
+      }
+
+      // Active l'école correspondante
+      targetLink.click();
+
+      // Attend la mise à jour du contenu avant le scroll
+      setTimeout(() => {
+        const hero = document.querySelector(".section.is--ecoles-hero");
+        if (!hero) return;
+
+        const offset = 80;
+
+        const top =
+          hero.getBoundingClientRect().top +
+          window.scrollY -
+          offset;
+
+        window.scrollTo({
+          top,
+          behavior: "smooth"
+        });
+      }, 100);
+    }
+
+
     function closeEcoleGroup(group) {
       if (!group) return;
   
